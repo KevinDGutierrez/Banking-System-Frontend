@@ -28,3 +28,36 @@ apiClient.interceptors.request.use(
         return Promise.reject(error);
     }
 )
+
+
+export const login = async (data) => {
+    return await apiClient.post('users/login', data);
+}
+
+export const register = async (data) => {
+    return await apiClient.post('users/register', data);
+}
+
+export const aprobarCliente = async (id) => {
+    return await apiClient.put(`users/${id}/aprobar`);
+}
+
+export const updateCliente = async (data) => {
+    return await apiClient.put(`users/${data}`);
+}
+
+export const deleteCliente = async (id) => {
+    return await apiClient.delete(`users/${id}`);
+}
+
+export const getClientes = async () => {
+    return await apiClient.get('users');
+}
+
+export const tipoCuenta = async (numeroCuenta) => {
+    return await apiClient.put(`users/cuentas/${numeroCuenta}/tipo`);
+}
+
+export const resetPassword = async (codigoGenerado) => {
+    return await apiClient.put(`users/reset/${codigoGenerado}`);
+}
