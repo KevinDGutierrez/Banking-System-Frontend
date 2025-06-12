@@ -3,7 +3,7 @@ import { useLogout } from "../shared/hooks/useLogout"
 
 
 const apiClient = axios.create({
-    baseURL : 'http://127.0.0.1:3000/bankingSystem',
+    baseURL : 'http://127.0.0.1:3000/',
     timeout : 5000
 })
 
@@ -60,4 +60,8 @@ export const tipoCuenta = async (numeroCuenta) => {
 
 export const resetPassword = async (codigoGenerado) => {
     return await apiClient.put(`users/reset/${codigoGenerado}`);
+}
+
+export const solicitarRecuperacion = async (data) => {
+    return await apiClient.post(`users/recuperacion`, data);
 }
