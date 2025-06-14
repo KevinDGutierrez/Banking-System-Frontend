@@ -5,6 +5,9 @@ import Login from "../../components/Login.jsx"
 import Register from "../../components/Register.jsx"
 import Solicitud from "../../components/Solicitud.jsx"
 import Dashboard from "../../components/Dashboard/Dashboard.jsx"
+import Banking from "../../components/Banking/Banking.jsx"
+import ClientDashboard from "../../components/Dashboard/ClientDashboard.jsx"
+import AdminDashboard from "../../components/Dashboard/AdminDashboard.jsx"
  export const AppRoutes = () => {
     const routes = useRoutes([
         { path: "/", element: <Login /> },
@@ -14,7 +17,22 @@ import Dashboard from "../../components/Dashboard/Dashboard.jsx"
             <PrivateRoute>
                 <Dashboard />
             </PrivateRoute> 
-        )}
+        )},
+        {path : "/banking", element : (
+            <PrivateRoute>
+                <Banking />
+            </PrivateRoute> 
+        )},
+        {path : "/clientDashboard", element : (
+            <PrivateRoute>
+                <ClientDashboard />
+            </PrivateRoute> 
+        )},
+        {path : "/adminDashboard", element : (
+            <PrivateRoute>
+                <AdminDashboard />
+            </PrivateRoute> 
+        )},
 
     ])
 

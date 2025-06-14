@@ -51,7 +51,7 @@ export const deleteCliente = async (id) => {
 }
 
 export const getClientes = async () => {
-    return await apiClient.get('users');
+    return await apiClient.get('users/');
 }
 
 export const tipoCuenta = async (numeroCuenta) => {
@@ -64,6 +64,10 @@ export const resetPassword = async ( data) => {
 
 export const solicitarRecuperacion = async (data) => {
     return await apiClient.post('users/recuperacion', data);
+}
+
+export const getBanking = async () => {
+    return await apiClient.get('/bancos/');
 }
 
 

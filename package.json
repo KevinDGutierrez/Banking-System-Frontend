@@ -24,6 +24,7 @@
     "boxicons": "^2.1.4",
     "chart.js": "^4.4.9",
     "framer-motion": "^12.17.0",
+    "lucide-react": "^0.515.0",
     "material": "^0.9.23",
     "proxy-compare": "^3.0.1",
     "react": "^19.1.0",

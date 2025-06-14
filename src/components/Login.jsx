@@ -42,9 +42,9 @@ const Login = () => {
                 playsInline
             />
             <div class="carousel-caption d-none d-md-block">
-        <h5>Banco Innova Guatemala</h5>
-        <p>Tu socio financiero para un futuro más brillante</p>
-      </div>
+                <h5>Banco Innova Guatemala</h5>
+                <p>Tu socio financiero para un futuro más brillante</p>
+            </div>
             <div className="relative z-10 flex justify-center items-center h-full px-4">
                 <Fade in timeout={800}>
                     <Paper
@@ -111,8 +111,8 @@ const Login = () => {
                                     ),
                                     endAdornment: (
                                         <InputAdornment position="end">
-                                            <IconButton 
-                                                onClick={() => setShowPassword(!showPassword)} 
+                                            <IconButton
+                                                onClick={() => setShowPassword(!showPassword)}
                                                 edge="end"
                                                 className="text-blue-600"
                                             >
@@ -129,8 +129,8 @@ const Login = () => {
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                sx={{ 
-                                    mt: 2, 
+                                sx={{
+                                    mt: 2,
                                     mb: 1,
                                     py: 1.5,
                                     borderRadius: 2,
