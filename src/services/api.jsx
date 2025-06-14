@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useLogout } from "../shared/hooks/useLogout"
+import { logout } from "../shared/hooks/useLogout"
 
 
 const apiClient = axios.create({
@@ -58,10 +58,21 @@ export const tipoCuenta = async (numeroCuenta) => {
     return await apiClient.put(`users/cuentas/${numeroCuenta}/tipo`);
 }
 
-export const resetPassword = async (codigoGenerado) => {
-    return await apiClient.put(`users/reset/${codigoGenerado}`);
+export const resetPassword = async ( data) => {
+    return await apiClient.post('users/reset', data);
 }
 
 export const solicitarRecuperacion = async (data) => {
-    return await apiClient.post(`users/recuperacion`, data);
+    return await apiClient.post('users/recuperacion', data);
+}
+
+
+const checkResponseStatus = (e) => {
+    const responseStatus = e?.response?.status;
+
+    if (responseStatus) {
+        (responseStatus === 401 || responseStatus === 403) && logout();
+    } else {
+        console.error("Error inesperado:", e);
+    }
 }

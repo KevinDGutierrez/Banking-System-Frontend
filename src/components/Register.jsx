@@ -18,6 +18,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import video4 from '../assets/video4.mp4'
+import {motion} from 'framer-motion'
 
 
 export const Register = ({ switchAuthHandler }) => {
@@ -194,6 +195,7 @@ export const Register = ({ switchAuthHandler }) => {
     !formState.ingresos.isValid;
 
   return (
+    <motion.div className="relative min-h-screen w-full overflow-hidden" initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 1}}>
     <div className="relative min-h-screen w-full overflow-hidden"> 
     <video
     className="absolute top-0 left-0 w-full h-full object-cover brightness-50 z0"
@@ -487,6 +489,7 @@ export const Register = ({ switchAuthHandler }) => {
       </div>
     </div>
     </div>
+    </motion.div>
   );
 };
 

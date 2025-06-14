@@ -33,38 +33,48 @@ export const validarCamposEditables = (data) => {
     }
 }
 
-export const validarContaseñaActual = (cliente, currentPassword, newPassword) => {
-    try {
-        const {password} = cliente;
-        if (password !== currentPassword) {
-            return "La contraseña actual no es correcta";
+
+
+
+
+
+export const validateUsernameOrEmail = (value) => {
+    if (!value.trim()) {
+        return {
+            isValid: false,
+            message: 'Username or email is required'
         }
-    } catch (error) {
-        return "Error al validar la contraseña actual";
     }
+
+    const isEmail = /\S+@\S+\.\S+/.test(value);
+    const isUsername = /^\S{3,20}$/.test(value);
+
+    if (!isEmail && !isUsername) {
+        return {
+            isValid: false,
+            message: 'Ingresa un correo válido o un nombre de usuario 3 a 20 caracteres sin espacios'
+        }
+    }
+
+    return { isValid: true, message: '' };
 }
 
-export const NoRepetirContraseña = (password, newPassword) => {
-    if (password === newPassword) {
-        return "La nueva contraseña no puede ser igual a la contraseña actual";
+export const validatePassword = (value) => {
+    if (!value.trim()) {
+        return {
+            isValid: false,
+            message: 'Password is required'
+        }
     }
-}
 
-export const validarActivacionCuentaStatus = (user) => {
-    if (!user.status && user.role === "CLIENTE") {
-        return "Cuenta pendiente de Aprobación por parte del administrador";
-    }  else if (user.status === "activa") {
-        return null; 
+    const regex = /^\S{8,8}$/;
+    if (!regex.test(value)) {
+        return {
+            isValid: false,
+            message: 'La contraseña debe contener exactamente 8 caracteres y no debe contener espacios'
+        }
     }
-}
 
-export const codigoVencido = (codigoGenerado) => {
-    const currentDate = new Date();
-    const expirationDate = new Date(codigoGenerado);
-    
-    if (currentDate > expirationDate) {
-        return "El código de recuperación ha expirado";
-    }
-    return null;
+    return { isValid: true, message: '' };
 }
 
