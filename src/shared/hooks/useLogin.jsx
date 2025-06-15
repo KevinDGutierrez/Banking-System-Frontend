@@ -34,7 +34,7 @@ export const useLogin = () => {
             html: `<div class="${settings.textColor}">${text}</div>`,
             timer: timer,
             showConfirmButton: timer ? false : true,
-            background: '#ffffff',
+            background: '#1f2937',
             backdrop: type === 'success' ? 
                 'rgba(59, 130, 246, 0.15)' : 
                 'rgba(239, 68, 68, 0.15)',

@@ -8,31 +8,55 @@ import Dashboard from "../../components/Dashboard/Dashboard.jsx"
 import Banking from "../../components/Banking/Banking.jsx"
 import ClientDashboard from "../../components/Dashboard/ClientDashboard.jsx"
 import AdminDashboard from "../../components/Dashboard/AdminDashboard.jsx"
- export const AppRoutes = () => {
+import AccountBankingAdmin from "../../components/AccountBanking/AccoutAdmin.jsx"
+import ClienteAdmin from "../../components/Client/ClienteAdmin.jsx"
+export const AppRoutes = () => {
     const routes = useRoutes([
         { path: "/", element: <Login /> },
         { path: "/register", element: <Register /> },
         { path: "/recuperar", element: <Solicitud /> },
-        {path : "/dashboard", element : (
-            <PrivateRoute>
-                <Dashboard />
-            </PrivateRoute> 
-        )},
-        {path : "/banking", element : (
-            <PrivateRoute>
-                <Banking />
-            </PrivateRoute> 
-        )},
-        {path : "/clientDashboard", element : (
-            <PrivateRoute>
-                <ClientDashboard />
-            </PrivateRoute> 
-        )},
-        {path : "/adminDashboard", element : (
-            <PrivateRoute>
-                <AdminDashboard />
-            </PrivateRoute> 
-        )},
+        {
+            path: "/dashboard", element: (
+                <PrivateRoute>
+                    <Dashboard />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/banking", element: (
+                <PrivateRoute>
+                    <Banking />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/clientDashboard", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <ClientDashboard />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/adminDashboard", element: (
+                <PrivateRoute roles={["ADMIN"]}>
+                    <AdminDashboard />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/adminAccounts", element: (
+                <PrivateRoute roles={["ADMIN"]}>
+                    <AccountBankingAdmin />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/clientesAdmin", element: (
+                <PrivateRoute roles={["ADMIN"]}>
+                    <ClienteAdmin />
+                </PrivateRoute>
+            )
+        },
 
     ])
 

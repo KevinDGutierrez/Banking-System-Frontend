@@ -10,7 +10,7 @@ export const useBanking = () => {
         try {
             const response = await getBanking();
             console.log(response);
-            setBanking(response.data.banking);
+            setBanking(response.data);
         } catch (error) {
             const backendError = error.response?.data;
             Swal.fire({

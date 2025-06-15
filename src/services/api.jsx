@@ -38,20 +38,9 @@ export const register = async (data) => {
     return await apiClient.post('users/register', data);
 }
 
-export const aprobarCliente = async (id) => {
-    return await apiClient.put(`users/${id}/aprobar`);
-}
 
 export const updateCliente = async (data) => {
     return await apiClient.put(`users/${data}`);
-}
-
-export const deleteCliente = async (id) => {
-    return await apiClient.delete(`users/${id}`);
-}
-
-export const getClientes = async () => {
-    return await apiClient.get('users/');
 }
 
 export const tipoCuenta = async (numeroCuenta) => {
@@ -68,6 +57,26 @@ export const solicitarRecuperacion = async (data) => {
 
 export const getBanking = async () => {
     return await apiClient.get('/bancos/');
+}
+
+export const getAccountsBanking = async () => {
+    return await apiClient.get('/cuentas/todas');
+}
+
+export const AprobarCuentaBancaria = async (numeroCuenta) => {
+    return await apiClient.put(`cuentas/${numeroCuenta}/aprobar`);
+}
+
+export const getClientesByAdmin = async () => {
+    return await apiClient.get('users/clientes');
+}
+
+export const AprobarCliente = async (id) => {
+    return await apiClient.put(`users/${id}/aprobar`);
+}
+
+export const deleteCliente = async (id) => {
+    return await apiClient.delete(`users/${id}`);
 }
 
 

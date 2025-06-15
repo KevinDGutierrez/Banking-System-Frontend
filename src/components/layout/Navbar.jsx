@@ -3,12 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { Menu, LogOut, User } from 'lucide-react';
 import Swal from 'sweetalert2';
 import {logout as logoutHandler} from '../../shared/hooks/useLogout';
-import { useMyAccount } from '../../shared/hooks/useDashboard';
 
 const Navbar = ({ toggleSidebar }) => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user'));
-  const { myAccount, handleMyAccount } = useMyAccount();
 
   const handleLogout = () => {
     Swal.fire({
@@ -43,13 +41,6 @@ const Navbar = ({ toggleSidebar }) => {
         </div>
         
         <div className="flex items-center space-x-4">
-          <button 
-            onClick={handleMyAccount}
-            className="flex items-center space-x-1 px-3 py-2 rounded-md hover:bg-gray-700 transition-all duration-300 group"
-          >
-            <User className="h-5 w-5 group-hover:text-blue-400" />
-            <span className="hidden md:inline">Mi Cuenta</span>
-          </button>
           
           <button 
             onClick={handleLogout}
