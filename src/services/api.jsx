@@ -79,6 +79,10 @@ export const deleteCliente = async (id) => {
     return await apiClient.delete(`users/${id}`);
 }
 
+export const deleteAccounts = async (id) => {
+    return await apiClient.delete(`cuentas/${id}`);
+}
+
 
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
