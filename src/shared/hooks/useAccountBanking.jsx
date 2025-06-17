@@ -1,15 +1,19 @@
 import { useState } from 'react';
-import { getAccountsBanking, AprobarCuentaBancaria, deleteAccounts } from '../../services/api';
+import { getAccountsBanking, AprobarCuentaBancaria, deleteAccounts, getAccountUserBanking, addAccountBanking, getOpciones } from '../../services/api';
 import Swal from 'sweetalert2';
 
 export const useAccountBanking = () => {
     const [accountBanking, setAccountBanking] = useState([]);
+    const [accountBankingUser, setAccountBankingUser] = useState([]);
+    const [tiposCuenta, setTiposCuenta] = useState([]);
+    const [monedas, setMonedas] = useState([]);
+
     const [loading, setLoading] = useState(false);
 
     const handleGetAccountBanking = async () => {
         try {
             const response = await getAccountsBanking();
-            console.log(response);
+            console.log(response, "cuentas bancarias");
             setAccountBanking(response.data);
         } catch (error) {
             const backendError = error.response?.data;
@@ -117,6 +121,70 @@ export const useAccountBanking = () => {
         }
     };
 
+    const handleGetAccountBankingUser = async () => {
+        try {
+            const response = await getAccountUserBanking();
+            console.log(response, "cuentas cliente unique")
+            setAccountBankingUser(response.data)
+        } catch (error) {
+            const backendError = error.response?.data;
+            Swal.fire({
+                title: 'Error',
+                text: backendError?.error || backendError?.msg || 'Error',
+                icon: 'error',
+            });
+        }
 
-    return { accountBanking, handleGetAccountBanking, handleAprobarCuenta, handleDeleteCuenta };
+    }
+
+    const handleAddAccountBanking = async (data) => {
+        try {
+            setLoading(true);
+            const response = await addAccountBanking(data);
+            console.log(response);
+
+            await Swal.fire({
+                title: 'Cuenta Agregada',
+                text: 'La cuenta ha sido agregada exitosamente',
+                icon: 'success',
+                timer: 1500,
+                background: '#1f2937',
+                color: 'white',
+                customClass: {
+                    popup: 'animate__animated animate__fadeInDown',
+                }
+            });
+
+            await handleGetAccountBanking();
+        } catch (error) {
+            const backendError = error.response?.data;
+            Swal.fire({
+                title: 'Error',
+                text: backendError?.error || backendError?.msg || 'Error',
+                icon: 'error',
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleGetOpciones = async () => {
+        try {
+            const response = await getOpciones();
+            console.log(response);
+            setTiposCuenta(response.data.tiposCuentas);
+            setMonedas(response.data.monedasCuentas);
+        } catch (error) {
+            const backendError = error.response?.data;
+            Swal.fire({
+                title: 'Error',
+                text: backendError?.error || backendError?.msg || 'Error',
+                icon: 'error',
+            });
+        }
+    }
+
+
+
+    return { accountBankingUser, accountBanking, handleGetAccountBanking, handleAprobarCuenta, handleDeleteCuenta, handleGetAccountBankingUser, handleAddAccountBanking, handleGetOpciones, tiposCuenta, monedas };
 }
