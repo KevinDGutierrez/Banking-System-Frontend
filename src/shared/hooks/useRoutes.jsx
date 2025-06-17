@@ -10,6 +10,8 @@ import ClientDashboard from "../../components/Dashboard/ClientDashboard.jsx"
 import AdminDashboard from "../../components/Dashboard/AdminDashboard.jsx"
 import AccountBankingAdmin from "../../components/AccountBanking/AccoutAdmin.jsx"
 import ClienteAdmin from "../../components/Client/ClienteAdmin.jsx"
+import ProductosComponent from "../../components/Producto/Producto.jsx"
+
 export const AppRoutes = () => {
     const routes = useRoutes([
         { path: "/", element: <Login /> },
@@ -57,6 +59,13 @@ export const AppRoutes = () => {
                 </PrivateRoute>
             )
         },
+        {
+            path: "/adminProductos", element: (
+                <PrivateRoute roles={["ADMIN"]}>
+                    <ProductosComponent />
+                </PrivateRoute>
+            )
+        }
 
     ])
 

@@ -1,14 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Wallet, User, Banknote, 
-  Users, Shield, ChevronLeft,
-} from 'lucide-react';
+import { Wallet, User, Banknote, Users, Shield, ChevronLeft, Package } from 'lucide-react';
 import { useAccountBanking } from '../../shared/hooks/useDashboard';
 import { useBanking } from '../../shared/hooks/useDashboard';
 import { useClientesAdmin } from '../../shared/hooks/useDashboard';
 import { useAdminAccounts } from '../../shared/hooks/useDashboard';
 import { useMyAccount } from '../../shared/hooks/useDashboard';
+import { useProductoAdmin } from '../../shared/hooks/useDashboard';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -18,6 +16,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     const { clientesAdmin, handleClientesAdmin } = useClientesAdmin();
     const { adminAccounts, handleAdminAccounts } = useAdminAccounts();
     const { myAccount, handleMyAccount } = useMyAccount();
+    const { adminProductos, handleAdminProductos } = useProductoAdmin();
 
   const clientSections = [
     { text: 'Cuenta Bancaria', icon: <Wallet className="h-5 w-5"  />, action : handleAccountBanking },
@@ -29,6 +28,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { text: 'Gestión de Clientes', icon: <Users className="h-5 w-5"/>, action : handleClientesAdmin },
     { text: 'Gestión de Cuentas', icon: <Shield className="h-5 w-5" />, action : handleAdminAccounts },
     { text: 'Bancos', icon: <Banknote className="h-5 w-5"  />, action : handleBanking },
+    { text: 'Productos', icon: <Package className="h-5 w-5"  />, action : handleAdminProductos },
   ];
 
   const sections = user?.role === 'ADMIN' ? adminSections : clientSections;
