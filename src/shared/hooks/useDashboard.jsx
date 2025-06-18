@@ -77,5 +77,21 @@ export const useAdminAccounts = () => {
   return {adminAccounts, handleAdminAccounts};
 }
 
+export const userFavorites = () => {
+    const [favoritosClient, setFavoritosClient] = useState([]);
+    const navigate = useNavigate();
+
+   const handleFavoritesClient = async () => {
+    try {
+        navigate("/favoritos", {state : {message : "Welcome to list of favorites"}});
+    } catch (error) {
+        console.log(error);
+    }
+   }
+  
+
+return {favoritosClient, handleFavoritesClient};
+}
+
 
 

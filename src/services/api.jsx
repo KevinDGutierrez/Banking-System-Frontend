@@ -88,6 +88,14 @@ export const getAccountsBanking = async () => {
     return await apiClient.get('/cuentas/todas');
 }
 
+export const getFavorites = async () => {
+    return await apiClient.get('/favoritos/');
+}
+
+export const addFavorite = async (data) => {
+    return await apiClient.post('favoritos/', data);
+}
+
 
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
