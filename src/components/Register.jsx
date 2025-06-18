@@ -30,6 +30,26 @@ export const Register = ({ switchAuthHandler }) => {
     useRegister();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState("");
+
+  function evaluarPassword(password) {
+    const tieneMayus = /[A-Z]/.test(password);
+    const tieneMinus = /[a-z]/.test(password);
+    const tieneNumeros = /[0-9]/.test(password);
+    const tieneEspecial = /[!@#$%]/.test(password);
+    const longitud = password.length;
+
+    let puntaje = 0;
+    if (tieneMayus) puntaje++;
+    if (tieneMinus) puntaje++;
+    if (tieneNumeros) puntaje++;
+    if (tieneEspecial) puntaje++;
+    if (longitud > 8) puntaje++;
+
+    if (puntaje <= 2) return "Baja";
+    if (puntaje === 3 || puntaje === 4) return "Media";
+    if (puntaje === 5) return "Alta";
+  }
 
   const [formState, setFormState] = useState({
     name: {
@@ -134,7 +154,10 @@ export const Register = ({ switchAuthHandler }) => {
             showErrorMessage ? "border-red-500" : "border-gray-300"
           } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
           value={value}
-          onChange={(e) => onChangeHandler(e.target.value, field)}
+         onChange={(e) => {
+          onChangeHandler(e.target.value, field);
+          onBlurHandler(e.target.value, field); 
+        }} 
           onBlur={(e) => onBlurHandler(e.target.value, field)}
         >
           <option value="">Seleccione una opción</option>
@@ -257,6 +280,12 @@ export const Register = ({ switchAuthHandler }) => {
 
   const handleClickShowConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const handlePasswordChange = (value, field) => {
+     console.log(`contraseña: ${field}, Valor:`, value);
+    handleInputValueChange(value, field);
+    setPasswordStrength(evaluarPassword(value));
   };
 
   const isSubmitButtonDisable =
@@ -421,26 +450,47 @@ export const Register = ({ switchAuthHandler }) => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    field="password"
-                    label="Contraseña"
-                    value={formState.password.value}
-                    onChangeHandler={handleInputValueChange}
-                    type={showPassword ? "text" : "password"}
-                    onBlurHandler={handleInputValidationOnBlur}
-                    showErrorMessage={formState.password.showError}
-                    validationMessage={formState.password.validationMessage}
-                    icon={LockIcon}
-                    endAdornment={
-                      <button
-                        type="button"
-                        onClick={handleClickShowPassword}
-                        className="text-gray-500 hover:text-gray-700 focus:outline-none"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </button>
-                    }
-                  />
+                  <div className="relative">
+                    <Input
+                      field="password"
+                      label="Contraseña"
+                      value={formState.password.value}
+                      onChangeHandler={handlePasswordChange}
+                      type={showPassword ? "text" : "password"}
+                      onBlurHandler={handleInputValidationOnBlur}
+                      showErrorMessage={formState.password.showError}
+                      validationMessage={formState.password.validationMessage}
+                      icon={LockIcon}
+                      endAdornment={
+                        <div className="flex items-center">
+                          <button
+                            type="button"
+                            onClick={handleClickShowPassword}
+                            className="text-gray-500 hover:text-gray-700 focus:outline-none mr-2"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </button>
+                        </div>
+                      }
+                    />
+                    {formState.password.value && (
+                      <div className="mt-1">
+                        <span className="text-xs font-medium">Fortaleza: </span>
+                        <span className={`text-xs font-bold ${passwordStrength === "Baja" ? "text-red-600" :
+                            passwordStrength === "Media" ? "text-yellow-600" : "text-green-600"
+                          }`}>
+                          {passwordStrength}
+                        </span>
+                        <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                          <div
+                            className={`h-1.5 rounded-full ${passwordStrength === "Baja" ? "bg-red-600 w-1/3" :
+                                passwordStrength === "Media" ? "bg-yellow-600 w-2/3" : "bg-green-600 w-full"
+                              }`}
+                          ></div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                   <Input
                     field="passwordConfir"
@@ -460,11 +510,7 @@ export const Register = ({ switchAuthHandler }) => {
                         onClick={handleClickShowConfirmPassword}
                         className="text-gray-500 hover:text-gray-700 focus:outline-none"
                       >
-                        {showConfirmPassword ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
+                        {showConfirmPassword ? (<VisibilityOff />) : (<Visibility />)}
                       </button>
                     }
                   />
