@@ -101,6 +101,7 @@ export const Register = ({ switchAuthHandler }) => {
   });
 
   const handleInputValueChange = (value, field) => {
+    console.log(`Campo cambiado: ${field}, Valor:`, value);
     setFormState((prevState) => ({
       ...prevState,
       [field]: {
@@ -121,7 +122,7 @@ export const Register = ({ switchAuthHandler }) => {
       : { isValid: true, message: "" };
   };
 
-  const SelectInput = ({ field, label, value, onChangeHandler, onBlurHandler, showErrorMessage, validationMessage, icon : Icon }) => 
+  const SelectInput = ({ field, label, value, onChangeHandler, onBlurHandler, showErrorMessage, validationMessage, icon : Icon, options }) => 
      (<div className="flex flex-col space-y-1">
       <label className="text-sm font-medium text-gray-700">{label}</label>
       <div className="relative">
@@ -137,9 +138,9 @@ export const Register = ({ switchAuthHandler }) => {
           onBlur={(e) => onBlurHandler(e.target.value, field)}
         >
           <option value="">Seleccione una opción</option>
-          {tiposCuenta.map((tipo) => (
-            <option key={tipo} value={tipo}>
-              {tipo}
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
             </option>
           ))}
         </select>
@@ -471,7 +472,7 @@ export const Register = ({ switchAuthHandler }) => {
 
                 <button
                   type="submit"
-                  
+                  disabled={isSubmitButtonDisable}
                   className={`w-full py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
                     isSubmitButtonDisable
                       ? "bg-gray-400 cursor-not-allowed"
