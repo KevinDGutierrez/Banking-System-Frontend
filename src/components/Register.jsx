@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useRegister } from "../shared/hooks/useRegister";
-import { Input } from './Input.jsx'
-import { validarCamposObligatorios, ingresosCuenta, validarCamposUnicos } from "../shared/validations/validationsAuth";
+import { Input } from "./Input.jsx";
+import {
+  validarCamposObligatorios,
+  ingresosCuenta,
+  validarCamposUnicos,
+} from "../shared/validations/validationsAuth";
 import {
   Email as EmailIcon,
   Person as PersonIcon,
@@ -13,135 +17,208 @@ import {
   Badge as NameIcon,
   LocationOn as LocationOnIcon,
   Work as WorkIcon,
-  AccountBalance as AccountBalanceIcon
-} from '@mui/icons-material';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import video4 from '../assets/video4.mp4'
-import { motion } from 'framer-motion'
+  AccountBalance as AccountBalanceIcon,
+  MergeType as MergeTypeIcon,
+} from "@mui/icons-material";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import video4 from "../assets/video4.mp4";
+import { motion } from "framer-motion";
 
 export const Register = ({ switchAuthHandler }) => {
-  const { handleRegister, isLoading } = useRegister();
+  const { handleRegister, isLoading, handleGetOpciones, tiposCuenta } =
+    useRegister();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-
-
   const [formState, setFormState] = useState({
     name: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     dpi: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     direccion: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     correo: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     username: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     celular: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     password: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     passwordConfir: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     NameTrabajo: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
+      validationMessage: "",
     },
     ingresos: {
-      value: '',
+      value: "",
       isValid: false,
       showError: false,
-      validationMessage: ''
-    }
+      validationMessage: "",
+    },
+    tipo: {
+      value: "",
+      isValid: false,
+      showError: false,
+      validationMessage: "",
+    },
   });
 
   const handleInputValueChange = (value, field) => {
+    console.log(`Campo cambiado: ${field}, Valor:`, value);
     setFormState((prevState) => ({
       ...prevState,
       [field]: {
         ...prevState[field],
-        value
-      }
+        value,
+      },
     }));
   };
 
+  useEffect(() => {
+    handleGetOpciones();
+  }, []);
+
   const buildResult = (validador, value) => {
     const validacion = validador(value);
-    return typeof validacion === 'string'
+    return typeof validacion === "string"
       ? { isValid: false, message: validacion }
-      : { isValid: true, message: '' };
+      : { isValid: true, message: "" };
   };
 
+  const SelectInput = ({ field, label, value, onChangeHandler, onBlurHandler, showErrorMessage, validationMessage, icon : Icon, options }) => 
+     (<div className="flex flex-col space-y-1">
+      <label className="text-sm font-medium text-gray-700">{label}</label>
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Icon className="h-5 w-5 text-gray-400" />
+        </div>
+        <select
+          className={`block w-full pl-10 pr-3 py-2 border ${
+            showErrorMessage ? "border-red-500" : "border-gray-300"
+          } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+          value={value}
+          onChange={(e) => onChangeHandler(e.target.value, field)}
+          onBlur={(e) => onBlurHandler(e.target.value, field)}
+        >
+          <option value="">Seleccione una opción</option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </div>
+      {showErrorMessage && (
+        <p className="mt-1 text-sm text-red-600">{validationMessage}</p>
+      )}
+    </div>
+  );
+
   const handleInputValidationOnBlur = (value, field) => {
-    let result = { isValid: false, message: '' };
+    let result = { isValid: false, message: "" };
     switch (field) {
-      case 'name':
-        result = buildResult(validarCamposObligatorios('El nombre es obligatorio'), value);
+      case "name":
+        result = buildResult(
+          validarCamposObligatorios("El nombre es obligatorio"),
+          value
+        );
         break;
-      case 'dpi':
-        result = buildResult(validarCamposObligatorios('El DPI es obligatorio'), value);
+      case "dpi":
+        result = buildResult(
+          validarCamposObligatorios("El DPI es obligatorio"),
+          value
+        );
         break;
-      case 'direccion':
-        result = buildResult(validarCamposObligatorios('La direccion es obligatoria'), value);
+      case "direccion":
+        result = buildResult(
+          validarCamposObligatorios("La direccion es obligatoria"),
+          value
+        );
         break;
-      case 'username':
-        result = buildResult(validarCamposObligatorios('El username es obligatorio'), value);
+      case "username":
+        result = buildResult(
+          validarCamposObligatorios("El username es obligatorio"),
+          value
+        );
         break;
-      case 'correo':
-        result = buildResult(validarCamposObligatorios('El correo es obligatorio'), value);
+      case "correo":
+        result = buildResult(
+          validarCamposObligatorios("El correo es obligatorio"),
+          value
+        );
         break;
-      case 'celular':
-        result = buildResult(validarCamposObligatorios('El celular es obligatorio'), value);
+      case "celular":
+        result = buildResult(
+          validarCamposObligatorios("El celular es obligatorio"),
+          value
+        );
         break;
-      case 'password':
-        result = buildResult(validarCamposObligatorios('La contraseña es obligatoria'), value);
+      case "password":
+        result = buildResult(
+          validarCamposObligatorios("La contraseña es obligatoria"),
+          value
+        );
         break;
-      case 'NameTrabajo':
-        result = buildResult(validarCamposObligatorios('El nombre del trabajo es obligatorio'), value);
+      case "NameTrabajo":
+        result = buildResult(
+          validarCamposObligatorios("El nombre del trabajo es obligatorio"),
+          value
+        );
         break;
-      case 'ingresos':
+      case "ingresos":
         result = buildResult(ingresosCuenta, value);
         break;
-      case 'passwordConfir':
+      case "tipo":
+        result = buildResult(
+          validarCamposObligatorios("El tipo de cuenta es obligatorio"),
+          value
+        );
+        break;
+      case "passwordConfir":
         result = {
           isValid: value === formState.password.value,
-          message: value !== formState.password.value ? 'Las contraseñas no coinciden' : ''
-        }
+          message:
+            value !== formState.password.value
+              ? "Las contraseñas no coinciden"
+              : "",
+        };
         break;
       default:
         break;
@@ -153,8 +230,8 @@ export const Register = ({ switchAuthHandler }) => {
         ...prevState[field],
         isValid: result.isValid,
         showError: !result.isValid,
-        validationMessage: result.message
-      }
+        validationMessage: result.message,
+      },
     }));
   };
 
@@ -169,7 +246,8 @@ export const Register = ({ switchAuthHandler }) => {
       formState.celular.value,
       formState.password.value,
       formState.NameTrabajo.value,
-      formState.ingresos.value
+      formState.ingresos.value,
+      formState.tipo.value
     );
   };
 
@@ -181,7 +259,8 @@ export const Register = ({ switchAuthHandler }) => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const isSubmitButtonDisable = isLoading ||
+  const isSubmitButtonDisable =
+    isLoading ||
     !formState.name.isValid ||
     !formState.dpi.isValid ||
     !formState.direccion.isValid ||
@@ -191,10 +270,16 @@ export const Register = ({ switchAuthHandler }) => {
     !formState.password.isValid ||
     !formState.passwordConfir.isValid ||
     !formState.NameTrabajo.isValid ||
-    !formState.ingresos.isValid;
+    !formState.ingresos.isValid ||
+    !formState.tipo.isValid;
 
   return (
-    <motion.div className="relative min-h-screen w-full overflow-hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+    <motion.div
+      className="relative min-h-screen w-full overflow-hidden"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
       <div className="relative min-h-screen w-full overflow-hidden">
         <video
           className="absolute top-0 left-0 w-full h-full object-cover brightness-50 z0"
@@ -204,6 +289,7 @@ export const Register = ({ switchAuthHandler }) => {
           muted
           playsInline
         />
+
         <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
           <div className="w-full max-w-6xl flex flex-col md:flex-row gap-8">
             <div className="w-full md:w-1/2 bg-white rounded-xl shadow-lg overflow-hidden">
@@ -221,11 +307,11 @@ export const Register = ({ switchAuthHandler }) => {
               <form onSubmit={handleRegisterSubmit} className="p-6 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    field='name'
-                    label='Nombre'
+                    field="name"
+                    label="Nombre"
                     value={formState.name.value}
                     onChangeHandler={handleInputValueChange}
-                    type='text'
+                    type="text"
                     onBlurHandler={handleInputValidationOnBlur}
                     showErrorMessage={formState.name.showError}
                     validationMessage={formState.name.validationMessage}
@@ -233,11 +319,11 @@ export const Register = ({ switchAuthHandler }) => {
                   />
 
                   <Input
-                    field='dpi'
-                    label='DPI'
+                    field="dpi"
+                    label="DPI"
                     value={formState.dpi.value}
                     onChangeHandler={handleInputValueChange}
-                    type='text'
+                    type="text"
                     onBlurHandler={handleInputValidationOnBlur}
                     showErrorMessage={formState.dpi.showError}
                     validationMessage={formState.dpi.validationMessage}
@@ -246,11 +332,11 @@ export const Register = ({ switchAuthHandler }) => {
                 </div>
 
                 <Input
-                  field='direccion'
-                  label='Dirección'
+                  field="direccion"
+                  label="Dirección"
                   value={formState.direccion.value}
                   onChangeHandler={handleInputValueChange}
-                  type='text'
+                  type="text"
                   onBlurHandler={handleInputValidationOnBlur}
                   showErrorMessage={formState.direccion.showError}
                   validationMessage={formState.direccion.validationMessage}
@@ -259,11 +345,11 @@ export const Register = ({ switchAuthHandler }) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    field='username'
-                    label='Usuario'
+                    field="username"
+                    label="Usuario"
                     value={formState.username.value}
                     onChangeHandler={handleInputValueChange}
-                    type='text'
+                    type="text"
                     onBlurHandler={handleInputValidationOnBlur}
                     showErrorMessage={formState.username.showError}
                     validationMessage={formState.username.validationMessage}
@@ -271,11 +357,11 @@ export const Register = ({ switchAuthHandler }) => {
                   />
 
                   <Input
-                    field='correo'
-                    label='Correo'
+                    field="correo"
+                    label="Correo"
                     value={formState.correo.value}
                     onChangeHandler={handleInputValueChange}
-                    type='email'
+                    type="email"
                     onBlurHandler={handleInputValidationOnBlur}
                     showErrorMessage={formState.correo.showError}
                     validationMessage={formState.correo.validationMessage}
@@ -285,11 +371,11 @@ export const Register = ({ switchAuthHandler }) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    field='celular'
-                    label='Celular'
+                    field="celular"
+                    label="Celular"
                     value={formState.celular.value}
                     onChangeHandler={handleInputValueChange}
-                    type='tel'
+                    type="tel"
                     onBlurHandler={handleInputValidationOnBlur}
                     showErrorMessage={formState.celular.showError}
                     validationMessage={formState.celular.validationMessage}
@@ -297,37 +383,50 @@ export const Register = ({ switchAuthHandler }) => {
                   />
 
                   <Input
-                    field='NameTrabajo'
-                    label='Trabajo'
+                    field="NameTrabajo"
+                    label="Trabajo"
                     value={formState.NameTrabajo.value}
                     onChangeHandler={handleInputValueChange}
-                    type='text'
+                    type="text"
                     onBlurHandler={handleInputValidationOnBlur}
                     showErrorMessage={formState.NameTrabajo.showError}
                     validationMessage={formState.NameTrabajo.validationMessage}
                     icon={WorkIcon}
                   />
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    field="ingresos"
+                    label="Ingresos"
+                    value={formState.ingresos.value}
+                    onChangeHandler={handleInputValueChange}
+                    type="text"
+                    onBlurHandler={handleInputValidationOnBlur}
+                    showErrorMessage={formState.ingresos.showError}
+                    validationMessage={formState.ingresos.validationMessage}
+                    icon={AccountBalanceIcon}
+                  />
 
-                <Input
-                  field='ingresos'
-                  label='Ingresos'
-                  value={formState.ingresos.value}
-                  onChangeHandler={handleInputValueChange}
-                  type='text'
-                  onBlurHandler={handleInputValidationOnBlur}
-                  showErrorMessage={formState.ingresos.showError}
-                  validationMessage={formState.ingresos.validationMessage}
-                  icon={AccountBalanceIcon}
-                />
+                  <SelectInput
+                    field="tipo"
+                    label="Tipo de cuenta"
+                    value={formState.tipo.value}
+                    onChangeHandler={handleInputValueChange}
+                    onBlurHandler={handleInputValidationOnBlur}
+                    showErrorMessage={formState.tipo.showError}
+                    validationMessage={formState.tipo.validationMessage}
+                    icon={MergeTypeIcon}
+                    options={tiposCuenta}
+                  />
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
-                    field='password'
-                    label='Contraseña'
+                    field="password"
+                    label="Contraseña"
                     value={formState.password.value}
                     onChangeHandler={handleInputValueChange}
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     onBlurHandler={handleInputValidationOnBlur}
                     showErrorMessage={formState.password.showError}
                     validationMessage={formState.password.validationMessage}
@@ -344,14 +443,16 @@ export const Register = ({ switchAuthHandler }) => {
                   />
 
                   <Input
-                    field='passwordConfir'
-                    label='Confirmar'
+                    field="passwordConfir"
+                    label="Confirmar"
                     value={formState.passwordConfir.value}
                     onChangeHandler={handleInputValueChange}
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? "text" : "password"}
                     onBlurHandler={handleInputValidationOnBlur}
                     showErrorMessage={formState.passwordConfir.showError}
-                    validationMessage={formState.passwordConfir.validationMessage}
+                    validationMessage={
+                      formState.passwordConfir.validationMessage
+                    }
                     icon={LockIcon}
                     endAdornment={
                       <button
@@ -359,7 +460,11 @@ export const Register = ({ switchAuthHandler }) => {
                         onClick={handleClickShowConfirmPassword}
                         className="text-gray-500 hover:text-gray-700 focus:outline-none"
                       >
-                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                        {showConfirmPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
                       </button>
                     }
                   />
@@ -368,43 +473,89 @@ export const Register = ({ switchAuthHandler }) => {
                 <button
                   type="submit"
                   disabled={isSubmitButtonDisable}
-                  className={`w-full py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isSubmitButtonDisable
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
-                    }`}
+                  className={`w-full py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                    isSubmitButtonDisable
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                  }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Procesando...
                     </div>
-                  ) : 'Registrarse'}
+                  ) : (
+                    "Registrarse"
+                  )}
                 </button>
               </form>
 
               <div className="px-6 py-4 bg-gray-50 text-center">
                 <p className="text-gray-600">
-                  ¿Ya tienes una cuenta?{' '}
+                  ¿Ya tienes una cuenta?{" "}
                   <button
                     onClick={switchAuthHandler}
                     className="text-blue-600 hover:text-blue-800 font-medium focus:outline-none"
-
                   >
-                    <Link to={"/"} className="ml-2">Inicia sesión</Link>
+                    <Link to={"/"} className="ml-2">
+                      Inicia sesión
+                    </Link>
                   </button>
                 </p>
               </div>
             </div>
             <div className="w-full md:w-1/2">
-              <div id="carouselExampleCaptions" className="carousel slide carousel-fade" data-bs-ride="carousel">
+              <div
+                id="carouselExampleCaptions"
+                className="carousel slide carousel-fade"
+                data-bs-ride="carousel"
+              >
                 <div className="carousel-indicators">
-                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" className="active" aria-current="true" aria-label="Slide 1"></button>
-                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                  <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                  <button
+                    type="button"
+                    data-bs-target="#carouselExampleCaptions"
+                    data-bs-slide-to="0"
+                    className="active"
+                    aria-current="true"
+                    aria-label="Slide 1"
+                  ></button>
+                  <button
+                    type="button"
+                    data-bs-target="#carouselExampleCaptions"
+                    data-bs-slide-to="1"
+                    aria-label="Slide 2"
+                  ></button>
+                  <button
+                    type="button"
+                    data-bs-target="#carouselExampleCaptions"
+                    data-bs-slide-to="2"
+                    aria-label="Slide 3"
+                  ></button>
+                  <button
+                    type="button"
+                    data-bs-target="#carouselExampleCaptions"
+                    data-bs-slide-to="3"
+                    aria-label="Slide 4"
+                  ></button>
                 </div>
                 <div className="carousel-inner rounded-xl overflow-hidden shadow-lg">
                   <div className="carousel-item active">
@@ -414,8 +565,13 @@ export const Register = ({ switchAuthHandler }) => {
                       alt="Seguridad bancaria"
                     />
                     <div className="carousel-caption d-none d-md-block bg-black bg-opacity-50 p-4 rounded">
-                      <h5 className="text-xl font-bold text-blue-300">Seguridad Avanzada</h5>
-                      <p className="text-white">Protegemos tus transacciones con tecnología biométrica de última generación.</p>
+                      <h5 className="text-xl font-bold text-blue-300">
+                        Seguridad Avanzada
+                      </h5>
+                      <p className="text-white">
+                        Protegemos tus transacciones con tecnología biométrica
+                        de última generación.
+                      </p>
                     </div>
                   </div>
                   <div className="carousel-item">
@@ -425,8 +581,13 @@ export const Register = ({ switchAuthHandler }) => {
                       alt="Atención al cliente"
                     />
                     <div className="carousel-caption d-none d-md-block bg-black bg-opacity-50 p-4 rounded">
-                      <h5 className="text-xl font-bold text-green-300">Soporte 24/7</h5>
-                      <p className="text-white">Nuestro equipo está disponible para ayudarte en cualquier momento.</p>
+                      <h5 className="text-xl font-bold text-green-300">
+                        Soporte 24/7
+                      </h5>
+                      <p className="text-white">
+                        Nuestro equipo está disponible para ayudarte en
+                        cualquier momento.
+                      </p>
                     </div>
                   </div>
                   <div className="carousel-item">
@@ -436,8 +597,13 @@ export const Register = ({ switchAuthHandler }) => {
                       alt="Tecnología bancaria"
                     />
                     <div className="carousel-caption d-none d-md-block bg-black bg-opacity-50 p-4 rounded">
-                      <h5 className="text-xl font-bold text-yellow-300">Tecnología Innovadora</h5>
-                      <p className="text-white">Accede a tu cuenta desde cualquier lugar con nuestra plataforma digital segura.</p>
+                      <h5 className="text-xl font-bold text-yellow-300">
+                        Tecnología Innovadora
+                      </h5>
+                      <p className="text-white">
+                        Accede a tu cuenta desde cualquier lugar con nuestra
+                        plataforma digital segura.
+                      </p>
                     </div>
                   </div>
                   <div className="carousel-item">
@@ -447,36 +613,77 @@ export const Register = ({ switchAuthHandler }) => {
                       alt="Asesoramiento financiero"
                     />
                     <div className="carousel-caption d-none d-md-block bg-black bg-opacity-50 p-4 rounded">
-                      <h5 className="text-xl font-bold text-purple-300">Asesoramiento Personalizado</h5>
-                      <p className="text-white">Nuestros expertos te ayudarán a tomar las mejores decisiones financieras.</p>
+                      <h5 className="text-xl font-bold text-purple-300">
+                        Asesoramiento Personalizado
+                      </h5>
+                      <p className="text-white">
+                        Nuestros expertos te ayudarán a tomar las mejores
+                        decisiones financieras.
+                      </p>
                     </div>
                   </div>
                 </div>
-                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                  <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                <button
+                  className="carousel-control-prev"
+                  type="button"
+                  data-bs-target="#carouselExampleCaptions"
+                  data-bs-slide="prev"
+                >
+                  <span
+                    className="carousel-control-prev-icon"
+                    aria-hidden="true"
+                  ></span>
                   <span className="visually-hidden">Previous</span>
                 </button>
-                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                  <span className="carousel-control-next-icon" aria-hidden="true"></span>
+                <button
+                  className="carousel-control-next"
+                  type="button"
+                  data-bs-target="#carouselExampleCaptions"
+                  data-bs-slide="next"
+                >
+                  <span
+                    className="carousel-control-next-icon"
+                    aria-hidden="true"
+                  ></span>
                   <span className="visually-hidden">Next</span>
                 </button>
               </div>
               <div className="mt-6 bg-white p-6 rounded-xl shadow-lg">
-                <h3 className="text-xl font-bold text-blue-600 mb-4">Banco Guatemalteco</h3>
+                <h3 className="text-xl font-bold text-blue-600 mb-4">
+                  Banco Guatemalteco
+                </h3>
                 <p className="mb-4">Reforzará la seguridad al realizar:</p>
                 <ul className="space-y-2">
                   <li className="flex items-center">
                     <span className="bg-blue-100 text-blue-800 p-1 rounded-full mr-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </span>
                     Pagos de servicios e impuestos
                   </li>
                   <li className="flex items-center">
                     <span className="bg-blue-100 text-blue-800 p-1 rounded-full mr-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </span>
                     Transferencias a terceros, móviles

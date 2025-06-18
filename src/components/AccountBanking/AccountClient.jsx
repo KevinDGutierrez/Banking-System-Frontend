@@ -42,7 +42,7 @@ const AccountClient = () => {
             entidadBancaria: '',
             saldo: 0
         });
-        await handleGetAccountBankingUser(); // Refresh the list
+        await handleGetAccountBankingUser(); 
     };
 
     if (isLoading) {
