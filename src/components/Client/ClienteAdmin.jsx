@@ -22,7 +22,7 @@ import { Button } from '@mui/material';
 const ClienteAdmin = () => {
     const { clientes, handleGetClientes, handleAprobarCliente, handleDeleteCliente } = useClients();
     const [isLoading, setIsLoading] = useState(true);
-    const [expandedCliente, setExpandedCliente] = useState(null);
+    
 
     useEffect(() => {
         const fetchData = async () => {

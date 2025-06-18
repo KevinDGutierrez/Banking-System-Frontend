@@ -2,7 +2,7 @@ import axios from "axios"
 import { logout } from "../shared/hooks/useLogout"
 
 const apiClient = axios.create({
-    baseURL: 'http://127.0.0.1:3000/',
+    baseURL: 'https://banking-system-backend-production.up.railway.app/',
     timeout: 5000
 })
 
@@ -56,10 +56,6 @@ export const getBanking = async () => {
     return await apiClient.get('/bancos/');
 }
 
-export const getAccountsBanking = async () => {
-    return await apiClient.get('/cuentas/todas');
-}
-
 export const AprobarCuentaBancaria = async (numeroCuenta) => {
     return await apiClient.put(`cuentas/${numeroCuenta}/aprobar`);
 }
@@ -94,6 +90,25 @@ export const putProducto = async (id) => {
 
 export const deleteProducto = async (id) => {
     return await apiClient.delete(`productos/deleteProducto/${id}`);
+}
+export const deleteAccounts = async (id) => {
+    return await apiClient.delete(`cuentas/${id}`);
+}
+
+export const addAccountBanking = async (data) => {
+    return await apiClient.post('cuentas/', data);
+}
+
+export const getAccountUserBanking = async () => {
+    return await apiClient.get('cuentas/usuario');
+}
+
+export const getOpciones = async () => {
+    return await apiClient.get('cuentas/opciones');
+}
+
+export const getAccountsBanking = async () => {
+    return await apiClient.get('/cuentas/todas');
 }
 
 const checkResponseStatus = (e) => {

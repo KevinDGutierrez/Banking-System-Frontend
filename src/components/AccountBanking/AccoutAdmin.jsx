@@ -2,24 +2,23 @@ import React, { useState, useEffect } from 'react';
 import Layout from '../layout/Layout';
 import { useAccountBanking } from '../../shared/hooks/useAccountBanking';
 import {
-  AccountBalance as AccountBalanceIcon,
-  Face as FaceIcon,
-  Score as ScoreIcon,
-  Balance as BalanceIcon,
-  CurrencyExchange as CurrencyExchangeIcon,
-  BrandingWatermark as BrandingWatermarkIcon,
-  CalendarMonth as CalendarMonthIcon,
-  MoreHoriz as MoreHorizIcon,
-  CheckCircle as CheckCircleIcon,
-  Lock as LockIcon
+    AccountBalance as AccountBalanceIcon,
+    Face as FaceIcon,
+    Score as ScoreIcon,
+    Balance as BalanceIcon,
+    CurrencyExchange as CurrencyExchangeIcon,
+    BrandingWatermark as BrandingWatermarkIcon,
+    CalendarMonth as CalendarMonthIcon,
+    MoreHoriz as MoreHorizIcon,
+    CheckCircle as CheckCircleIcon,
+    Lock as LockIcon
 } from '@mui/icons-material';
 import { Button } from '@mui/material';
 import Swal from 'sweetalert2';
 
 const AccountBankingAdmin = () => {
-    const { accountBanking, handleGetAccountBanking, handleAprobarCuenta } = useAccountBanking();
+    const { accountBanking, handleGetAccountBanking, handleAprobarCuenta, handleDeleteCuenta } = useAccountBanking();
     const [isLoading, setIsLoading] = useState(true);
-    const [expandedAccount, setExpandedAccount] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,7 +30,12 @@ const AccountBankingAdmin = () => {
 
     const handleAprobarCuentaBancaria = async (numeroCuenta) => {
         await handleAprobarCuenta(numeroCuenta);
-        await handleGetAccountBanking(); // Actualizar la lista después de aprobar
+        await handleGetAccountBanking();
+    }
+
+    const handleEliminarCuentaBancaria = async (_id) => {
+        await handleDeleteCuenta(_id);
+        await handleGetAccountBanking()
     }
 
     if (isLoading) {
@@ -59,20 +63,17 @@ const AccountBankingAdmin = () => {
                     </div>
                 </div>
 
-                {/* Contenido principal */}
                 <div className="px-4 py-8">
                     <div className="max-w-7xl mx-auto">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {accountBanking.map((account, index) => (
                                 <div
                                     key={account._id}
-                                    className={`bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 ${
-                                        index % 2 === 0 ? 'animate-fade-in-left' : 'animate-fade-in-right'
-                                    }`}
+                                    className={`bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 ${index % 2 === 0 ? 'animate-fade-in-left' : 'animate-fade-in-right'
+                                        }`}
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >
                                     <div className="p-6 h-full flex flex-col">
-                                        {/* Encabezado de la tarjeta */}
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex items-center">
                                                 <AccountBalanceIcon className="text-blue-600 mr-3" />
@@ -80,11 +81,10 @@ const AccountBankingAdmin = () => {
                                                     {account.numeroCuenta}
                                                 </h3>
                                             </div>
-                                            <div className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                                account.estado === 'activa' 
-                                                    ? 'bg-green-100 text-green-800' 
-                                                    : 'bg-red-100 text-red-800'
-                                            }`}>
+                                            <div className={`px-3 py-1 rounded-full text-xs font-semibold ${account.estado === 'activa'
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-red-100 text-red-800'
+                                                }`}>
                                                 {account.estado === 'activa' ? (
                                                     <span className="flex items-center">
                                                         <CheckCircleIcon className="mr-1" style={{ fontSize: 16 }} />
@@ -99,7 +99,6 @@ const AccountBankingAdmin = () => {
                                             </div>
                                         </div>
 
-                                        {/* Información del propietario */}
                                         <div className="flex items-center mb-4 bg-gray-50 p-3 rounded-lg">
                                             <FaceIcon className="text-gray-600 mr-3" />
                                             <p className="text-gray-700 truncate" title={account.propietario.correo}>
@@ -107,7 +106,6 @@ const AccountBankingAdmin = () => {
                                             </p>
                                         </div>
 
-                                        {/* Detalles de la cuenta */}
                                         <div className="space-y-3 mt-2">
                                             <div className="flex items-center bg-blue-50 p-3 rounded-lg">
                                                 <ScoreIcon className="text-blue-600 mr-3" />
@@ -147,7 +145,6 @@ const AccountBankingAdmin = () => {
                                             </div>
                                         </div>
 
-                                        {/* Botón de aprobación */}
                                         {account.estado !== 'activa' && (
                                             <div className="mt-4 pt-4 border-t border-gray-200">
                                                 <Button
@@ -159,6 +156,20 @@ const AccountBankingAdmin = () => {
                                                     startIcon={<CheckCircleIcon />}
                                                 >
                                                     Aprobar cuenta
+                                                </Button>
+                                            </div>
+                                        )}
+                                        {account.estado !== 'bloqueada' && (
+                                            <div className="mt-4 pt-4 border-t border-gray-200">
+                                                <Button
+                                                    fullWidth
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={() => handleEliminarCuentaBancaria(account._id)}
+                                                    className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
+                                                    startIcon={<CheckCircleIcon />}
+                                                >
+                                                    Desactivar Cuenta
                                                 </Button>
                                             </div>
                                         )}

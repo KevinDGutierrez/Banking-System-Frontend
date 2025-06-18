@@ -1,176 +1,201 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../layout/Layout";
 import { useProductos } from "../../shared/hooks/useProductos";
-import { Tooltip, IconButton } from "@mui/material";
-import Swal from "sweetalert2";
-import { Calendar, Package, DollarSign, Boxes, Copy } from "lucide-react";
+import { Calendar, Package, DollarSign, Boxes, PlusCircle } from "lucide-react";
 
 const ProductosComponent = () => {
-    const { productos, loading, handleGetProductos } = useProductos();
+    const { productos, loading, handleGetProductos, handlePostProducto } = useProductos();
+
+    const [formData, setFormData] = useState({
+        nombre: '',
+        descripcion: '',
+        precio: '',
+        moneda: 'GTQ',
+        existencias: '',
+        puntos: ''
+    });
 
     useEffect(() => {
         handleGetProductos();
-    }, [])
+    }, []);
 
-    const copiarAlPortapapeles = (nombre) => {
-        navigator.clipboard.writeText(nombre).then(() => {
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "¡Nombre copiado!",
-                showConfirmButton: false,
-                timer: 1500,
-                background: "#4CAF50",
-                color: "white",
-                customClass: {
-                    popup: "animate__animated animate__fadeInDown",
-                },
-            })
-        })
-    }
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const data = {
+            ...formData,
+            precio: parseFloat(formData.precio),
+            existencias: parseInt(formData.existencias),
+            puntos: parseInt(formData.puntos)
+        };
+        await handlePostProducto(data, true);
+        setFormData({
+            nombre: '',
+            descripcion: '',
+            precio: '',
+            moneda: 'GTQ',
+            existencias: '',
+            puntos: ''
+        });
+    };
 
     if (loading) {
         return (
             <Layout>
-                <div className="flex justify-center items-center h-screen">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                <div className="d-flex justify-content-center align-items-center min-vh-100">
+                    <div className="spinner-border text-primary" role="status"></div>
                 </div>
             </Layout>
-        )
+        );
     }
 
     return (
         <Layout>
-            <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-blue-50">
-                <div className="bg-white py-8 px-4 shadow-sm sticky top-0 z-10 border-b border-gray-200">
-                    <div className="max-w-7xl mx-auto">
-                        <h1 className="text-4xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-800">Productos Disponibles</h1>
-                        <p className="text-center text-gray-600 mt-2">Explora nuestra lista completa de productos ~~</p>
+            <div className="container py-5">
+                <div className="card shadow mb-5">
+                    <div className="card-header bg-primary text-white d-flex align-items-center">
+                        <PlusCircle className="me-2" size={20} />
+                        <h5 className="mb-0">Agregar Nuevo Producto</h5>
+                    </div>
+                    <div className="card-body">
+                        <form onSubmit={handleSubmit} className="row g-3">
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    className="form-control"
+                                    placeholder="Nombre"
+                                    required
+                                    value={formData.nombre}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    name="descripcion"
+                                    className="form-control"
+                                    placeholder="Descripción"
+                                    required
+                                    value={formData.descripcion}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <input
+                                    type="number"
+                                    name="precio"
+                                    className="form-control"
+                                    placeholder="Precio"
+                                    required
+                                    value={formData.precio}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <select
+                                    name="moneda"
+                                    className="form-select"
+                                    value={formData.moneda}
+                                    onChange={handleChange}
+                                >
+                                    <option value="GTQ">GTQ</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                </select>
+                            </div>
+                            <div className="col-md-2">
+                                <input
+                                    type="number"
+                                    name="existencias"
+                                    className="form-control"
+                                    placeholder="Existencias"
+                                    required
+                                    value={formData.existencias}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="col-md-2">
+                                <input
+                                    type="number"
+                                    name="puntos"
+                                    className="form-control"
+                                    placeholder="Puntos"
+                                    required
+                                    value={formData.puntos}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="col-12 text-end">
+                                <button type="submit" className="btn btn-success px-4">Agregar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
-                <div className="flex-grow overflow-y-auto px-4 py-8">
-                    <div className="max-w-7xl mx-auto">
-                        {productos.length === 0 ? (
-                            <p className="text-center mt-10 text-gray-500">No hay productos disponibles!</p>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {productos.map((producto, index) => (
-                                    <div
-                                        key={producto._id || producto.id}
-                                        className={`bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-500 hover:shadow-2xl transform hover:scale-[1.02] ${index % 2 === 0
-                                            ? "animate-fade-in-left"
-                                            : "animate-fade-in-right"
-                                            }`}
-                                        style={{ animationDelay: `${index * 100}ms` }}
-                                    >
-                                        <div className="p-6 flex flex-col h-full">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <div>
-                                                    <h3 className="text-xl font-bold text-gray-800 capitalize">
-                                                        {producto.nombre}
-                                                    </h3>
-                                                    <p className="text-sm text-gray-500 mt-1">
-                                                        {producto.descripcion}
-                                                    </p>
-                                                </div>
-                                                <Tooltip title="Copiar nombre">
-                                                    <IconButton
-                                                        onClick={() => copiarAlPortapapeles(producto.nombre)}
-                                                        className="text-gray-500 hover:text-blue-600 transition-colors"
-                                                    >
-                                                        <Copy size={18} />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </div>
-
-                                            <div className="space-y-3">
-                                                <div className="flex items-center bg-yellow-50 p-3 rounded-lg">
-                                                    <Boxes size={18} className="text-yellow-600 mr-3" />
-                                                    <div>
-                                                        <span className="text-sm text-gray-600">
-                                                            Existencias:
-                                                        </span>
-                                                        <span className="ml-1 font-medium text-yellow-800">
-                                                            {producto.existencias}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-center bg-green-50 p-3 rounded-lg">
-                                                    <DollarSign size={18} className="text-green-600 mr-3" />
-                                                    <div>
-                                                        <span className="text-sm text-gray-600">Precio:</span>
-                                                        <span className="ml-1 font-medium text-green-800">
-                                                            ${producto.precio} {producto.moneda}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-center bg-blue-50 p-3 rounded-lg">
-                                                    <Package size={18} className="text-blue-600 mr-3" />
-                                                    <div>
-                                                        <span className="text-sm text-gray-600">Puntos:</span>
-                                                        <span className="ml-1 font-medium text-blue-800">
-                                                            {producto.puntos}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-center bg-gray-50 p-3 rounded-lg text-sm">
-                                                    <Calendar size={16} className="text-gray-500 mr-3" />
-                                                    <span className="text-gray-600">
-                                                        Agregado:{" "}
-                                                        {new Date(producto.createdAt).toLocaleDateString()}
-                                                    </span>
-                                                </div>
-                                            </div>
+                <div className="row g-4">
+                    {productos.length === 0 ? (
+                        <p className="text-center text-muted">No hay productos disponibles!</p>
+                    ) : (
+                        productos.map((producto) => (
+                            <div className="col-md-6 col-lg-4" key={producto._id || producto.id}>
+                                <div className="card h-100 shadow-sm border-0">
+                                    <div className="card-body d-flex flex-column">
+                                        <div className="mb-3">
+                                            <h5 className="card-title text-primary text-capitalize">{producto.nombre}</h5>
+                                            <p className="card-text text-muted">{producto.descripcion}</p>
                                         </div>
+
+                                        <ul className="list-unstyled flex-grow-1">
+                                            <li className="d-flex align-items-center mb-2 text-yellow-700">
+                                                <Boxes className="me-2 text-warning" size={18} />
+                                                <strong>Existencias:</strong> {producto.existencias}
+                                            </li>
+                                            <li className="d-flex align-items-center mb-2 text-success">
+                                                <DollarSign className="me-2" size={18} />
+                                                <strong>Precio Original:</strong> {producto.precioOriginal.valor} {producto.precioOriginal.moneda}
+                                            </li>
+
+                                            {producto.preciosConvertidos && (
+                                                <>
+                                                    <li className="d-flex align-items-center mb-1">
+                                                        <DollarSign className="me-2 text-blue-500" size={16} />
+                                                        <strong>GTQ:</strong> {producto.preciosConvertidos.GTQ}
+                                                    </li>
+                                                    <li className="d-flex align-items-center mb-1">
+                                                        <DollarSign className="me-2 text-green-500" size={16} />
+                                                        <strong>USD:</strong> {producto.preciosConvertidos.USD}
+                                                    </li>
+                                                    <li className="d-flex align-items-center mb-3">
+                                                        <DollarSign className="me-2 text-indigo-500" size={16} />
+                                                        <strong>EUR:</strong> {producto.preciosConvertidos.EUR}
+                                                    </li>
+                                                </>
+                                            )}
+
+                                            <li className="d-flex align-items-center mb-2 text-blue-700">
+                                                <Package className="me-2 text-primary" size={18} />
+                                                <strong>Puntos:</strong> {producto.puntos}
+                                            </li>
+
+                                            <li className="d-flex align-items-center text-muted text-sm">
+                                                <Calendar className="me-2" size={16} />
+                                                Agregado: {new Date(producto.createdAt).toLocaleDateString()}
+                                            </li>
+                                        </ul>
                                     </div>
-                                ))}
+                                </div>
                             </div>
-                        )}
-                    </div>
+                        ))
+                    )}
                 </div>
             </div>
-
-            <style jsx global>{`
-        @keyframes fadeInLeft {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        @keyframes fadeInRight {
-          from {
-            opacity: 0;
-            transform: translateX(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .animate-fade-in-left {
-          animation: fadeInLeft 0.6s ease-out forwards;
-        }
-
-        .animate-fade-in-right {
-          animation: fadeInRight 0.6s ease-out forwards;
-        }
-
-        .animate-fade-in {
-          animation: fadeInLeft 0.4s ease-out forwards;
-        }
-      `}</style>
         </Layout>
-    )
-}
+    );
+};
 
 export default ProductosComponent;

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register as registerService } from "../../services/api";
+import { register as registerService, getOpciones } from "../../services/api";
 import Swal from "sweetalert2";
 import 'animate.css';
 
 export const useRegister = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [tiposCuenta, setTiposCuenta] = useState([]);
     const navigate = useNavigate();
 
     const showSuccessAlert = async () => {
@@ -73,7 +74,7 @@ export const useRegister = () => {
         });
     };
 
-    const handleRegister = async (name, dpi, direccion, username, correo, celular, password, NameTrabajo, ingresos) => {
+    const handleRegister = async (name, dpi, direccion, username, correo, celular, password, NameTrabajo, ingresos, tipo) => {
         setIsLoading(true);
 
         try {
@@ -86,7 +87,8 @@ export const useRegister = () => {
                 celular,
                 password,
                 NameTrabajo,
-                ingresos
+                ingresos,
+                tipo
             });
 
             await showSuccessAlert();
@@ -100,8 +102,24 @@ export const useRegister = () => {
         }
     };
 
+
+    const handleGetOpciones = async () => {
+        try {
+            const response = await getOpciones();
+            console.log(response);
+            setTiposCuenta(response.data.tiposCuentas);
+        } catch (error) {
+            const backendError = error.response?.data;
+            Swal.fire({
+                title: 'Error',
+                text: backendError?.error || backendError?.msg || 'Error',
+                icon: 'error',
+            });
+        }
+    }
+
     return {
         handleRegister,
-        isLoading
+        isLoading, tiposCuenta, handleGetOpciones
     };
 };
