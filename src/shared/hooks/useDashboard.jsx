@@ -32,6 +32,36 @@ export const useAccountBanking = () => {
   return {accountBanking, handleAccountBanking};
 }
 
+export const useSolicitarCredito = () => {
+    const [solicitudCredito, setSolicitudCredito] = useState([]);
+    const navigate = useNavigate();
+
+   const handleSolicitarCredito = async () => {
+    try {
+        navigate("/solicitudCredito", {state : {message : "Welcome to account credits"}});
+    } catch (error) {
+        console.log(error);
+    }
+   }
+
+  return {solicitudCredito, handleSolicitarCredito};
+}
+
+export const useAprobarCredito = () => {
+    const [aprobarCredito, setAprobarCredito] = useState([]);
+    const navigate = useNavigate();
+
+   const handleAprobarCredito = async () => {
+    try {
+        navigate("/aprobarCredito", {state : {message : "Welcome to account credits"}});
+    } catch (error) {
+        console.log(error);
+    }
+   }
+
+  return {aprobarCredito, handleAprobarCredito};
+}
+
 export const useBanking = () => {
     const [banking, setBanking] = useState([]);
     const navigate = useNavigate();

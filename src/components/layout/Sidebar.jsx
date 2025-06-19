@@ -2,13 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Wallet, User, Banknote, 
-  Users, Shield, ChevronLeft,
+  Users, Shield, ChevronLeft, CreditCard
 } from 'lucide-react';
 import { useAccountBanking } from '../../shared/hooks/useDashboard';
 import { useBanking } from '../../shared/hooks/useDashboard';
 import { useClientesAdmin } from '../../shared/hooks/useDashboard';
 import { useAdminAccounts } from '../../shared/hooks/useDashboard';
 import { useMyAccount } from '../../shared/hooks/useDashboard';
+import { useSolicitarCredito } from '../../shared/hooks/useDashboard';
+import { useAprobarCredito } from '../../shared/hooks/useDashboard';
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -17,17 +19,21 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     const { banking, handleBanking } = useBanking();
     const { clientesAdmin, handleClientesAdmin } = useClientesAdmin();
     const { adminAccounts, handleAdminAccounts } = useAdminAccounts();
+    const { solicitudCredito, handleSolicitarCredito } = useSolicitarCredito();
+    const { aprobarCredito, handleAprobarCredito } = useAprobarCredito();
     const { myAccount, handleMyAccount } = useMyAccount();
 
   const clientSections = [
     { text: 'Cuenta Bancaria', icon: <Wallet className="h-5 w-5"  />, action : handleAccountBanking },
+    { text: 'Creditos', icon: <CreditCard className="h-5 w-5"  />, action : handleSolicitarCredito },
     { text: 'Bancos', icon: <Banknote className="h-5 w-5"  />, action : handleBanking },
     { text: 'Mi Cuenta', icon: <Users className="h-5 w-5"/>, action : handleMyAccount },
   ];
-
+  
   const adminSections = [
     { text: 'Gestión de Clientes', icon: <Users className="h-5 w-5"/>, action : handleClientesAdmin },
     { text: 'Gestión de Cuentas', icon: <Shield className="h-5 w-5" />, action : handleAdminAccounts },
+    { text: 'Creditos', icon: <CreditCard className="h-5 w-5"  />, action : handleAprobarCredito },
     { text: 'Bancos', icon: <Banknote className="h-5 w-5"  />, action : handleBanking },
   ];
 

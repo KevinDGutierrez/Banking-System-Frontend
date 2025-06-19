@@ -88,6 +88,25 @@ export const getAccountsBanking = async () => {
     return await apiClient.get('/cuentas/todas');
 }
 
+export const solicitarCredito = async (data) => {
+    return await apiClient.post('creditos/', data);
+}
+
+export const getCreditos = async () => {
+    return await apiClient.get('creditos/');
+}
+
+export const getCreditoById = async (id) => {
+    return await apiClient.get(`creditos/${id}`);
+}
+
+export const aprobarCredito = async (id, body) => {
+    return await apiClient.put(`creditos/${id}`, body);
+}
+
+export const deleteCredito = async (id) => {
+    return await apiClient.delete(`creditos/${id}`);
+}
 
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
