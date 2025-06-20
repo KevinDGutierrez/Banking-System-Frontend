@@ -22,7 +22,7 @@ import { Button } from '@mui/material';
 const ClienteAdmin = () => {
     const { clientes, handleGetClientes, handleAprobarCliente, handleDeleteCliente } = useClients();
     const [isLoading, setIsLoading] = useState(true);
-    
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -212,7 +212,7 @@ const ClienteAdmin = () => {
                                         </div>
 
                                         <div className="mt-6 pt-4 border-t border-gray-200">
-                                            {cliente.status !== 'activa' ? (
+                                            {!cliente.status && (
                                                 <Button
                                                     fullWidth
                                                     variant="contained"
@@ -221,16 +221,6 @@ const ClienteAdmin = () => {
                                                     startIcon={<CheckCircleIcon size={18} />}
                                                 >
                                                     Aprobar cliente
-                                                </Button>
-                                            ) : (
-                                                <Button
-                                                    fullWidth
-                                                    variant="contained"
-                                                    onClick={() => handleDeleteClienteAdmin(cliente._id)}
-                                                    className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
-                                                    startIcon={<DeleteIcon size={18} />}
-                                                >
-                                                    Eliminar cliente
                                                 </Button>
                                             )}
                                         </div>

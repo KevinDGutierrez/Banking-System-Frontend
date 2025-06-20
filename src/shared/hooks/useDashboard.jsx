@@ -8,6 +8,7 @@ export const useMyAccount = () => {
 
    const handleMyAccount = async () => {
     try {
+        console.log("1")
         navigate("/myAccount", {state : {message : "Welcome to my account"}});
     } catch (error) {
         console.log(error);

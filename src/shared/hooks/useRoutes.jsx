@@ -11,6 +11,8 @@ import AdminDashboard from "../../components/Dashboard/AdminDashboard.jsx"
 import AccountBankingAdmin from "../../components/AccountBanking/AccoutAdmin.jsx"
 import ClienteAdmin from "../../components/Client/ClienteAdmin.jsx"
 import AccountClient from "../../components/AccountBanking/AccountClient.jsx"
+import Favorites from "../../components/Favorites/Favorites.jsx"
+import MyAccount from "../../components/MyAccount/MyAccount.jsx"
 export const AppRoutes = () => {
     const routes = useRoutes([
         { path: "/", element: <Login /> },
@@ -62,6 +64,20 @@ export const AppRoutes = () => {
             path: "/accountBanking", element: (
                 <PrivateRoute roles={["CLIENTE"]}>
                     <AccountClient />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/favoritos", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <Favorites />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/myAccount", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <MyAccount />
                 </PrivateRoute>
             )
         }

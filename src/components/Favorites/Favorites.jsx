@@ -2,15 +2,21 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useFavorites } from '../../shared/hooks/useFavorites';
 import Layout from '../layout/Layout';
-
+import {
+    AccountBalance as AccountBalanceIcon,
+    Face as FaceIcon,
+    Balance as BalanceIcon,
+    CurrencyExchange as CurrencyExchangeIcon,
+    BrandingWatermark as BrandingWatermarkIcon,
+    Favorite as FavoriteIcon,
+    Star as StarIcon,
+    StarBorder as StarBorderIcon,
+} from '@mui/icons-material';
+import './Favorites.css';
 
 const Favorites = () => {
-    const { favoritos, handleGetFavorites, handleAddFavorite } = useFavorites();
+    const { favoritos, handleGetFavorites } = useFavorites();
     const [isLoading, setIsLoading] = useState(true);
-    const [formData, setFormData] = useState({
-       'cuentaDestino': '',
-       'alias': '',
-    });
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,24 +25,6 @@ const Favorites = () => {
         }
         fetchData();
     }, []);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        await handleAddFavorite(formData);
-        setFormData({
-            cuentaDestino: '',
-            alias: '',
-        });
-        await handleGetFavorites(); 
-    };
 
     if (isLoading) {
         return (
@@ -50,168 +38,142 @@ const Favorites = () => {
 
     return (
         <Layout>
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-                {/* Header */}
-                <div className="bg-white py-8 px-4 shadow-sm sticky top-0 z-10 border-b border-gray-200">
-                    <div className="max-w-7xl mx-auto">
-                        <h1 className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-800">
-                            Gestión de Cuentas Bancarias
-                        </h1>
-                        <p className="text-center text-gray-600 mt-2">
-                            Administración y aprobación de cuentas bancarias
-                        </p>
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50">
+                <div className="relative bg-gradient-to-r from-blue-600 to-indigo-800 py-16 px-4 shadow-lg overflow-hidden">
+                    <div className="absolute inset-0 bg-noise opacity-10"></div>
+                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-white/20"></div>
+                    <div className="max-w-7xl mx-auto relative z-10">
+                        <div className="flex flex-col items-center text-center">
+                            <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm mb-6 transform transition-all duration-500 hover:scale-105">
+                                <FavoriteIcon className="text-white text-5xl" />
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                                Tus <span className="text-yellow-300">Favoritos</span>
+                            </h1>
+                            <p className="text-blue-100 max-w-2xl text-lg md:text-xl leading-relaxed">
+                                Accede rápidamente a tus cuentas bancarias más utilizadas con un solo clic
+                            </p>
+                        </div>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 overflow-hidden h-20">
+                        <div className="wave wave1"></div>
+                        <div className="wave wave2"></div>
+                        <div className="wave wave3"></div>
                     </div>
                 </div>
-
-                <div className="px-4 py-8">
+                <div className="px-4 py-12 md:py-16">
                     <div className="max-w-7xl mx-auto">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {favoritos.map((account, index) => (
-                                <div
-                                    key={account._id}
-                                    className={`bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 ${index % 2 === 0 ? 'animate-fade-in-left' : 'animate-fade-in-right'
-                                        }`}
-                                    style={{ animationDelay: `${index * 100}ms` }}
-                                >
-                                    <div className="p-6 h-full flex flex-col">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div className="flex items-center">
-                                                <AccountBalanceIcon className="text-blue-600 mr-3" />
-                                                <h3 className="text-xl font-bold text-gray-800">
-                                                    {account.numeroCuenta}
-                                                </h3>
-                                            </div>
-                                            <div className={`px-3 py-1 rounded-full text-xs font-semibold ${account.estado === 'activa'
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
-                                                }`}>
-                                                {account.estado === 'activa' ? (
-                                                    <span className="flex items-center">
-                                                        <CheckCircleIcon className="mr-1" style={{ fontSize: 16 }} />
-                                                        Activa
-                                                    </span>
-                                                ) : (
-                                                    <span className="flex items-center">
-                                                        <LockIcon className="mr-1" style={{ fontSize: 16 }} />
-                                                        Bloqueada
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center mb-4 bg-gray-50 p-3 rounded-lg">
-                                            <FaceIcon className="text-gray-600 mr-3" />
-                                            <p className="text-gray-700 truncate" title={account.propietario.correo}>
-                                                {account.propietario.correo}
-                                            </p>
-                                        </div>
-
-                                        <div className="space-y-3 mt-2">
-                                            <div className="flex items-center bg-blue-50 p-3 rounded-lg">
-                                                <ScoreIcon className="text-blue-600 mr-3" />
-                                                <div>
-                                                    <span className="text-sm text-gray-600">Tipo: </span>
-                                                    <span className="ml-1 font-medium text-blue-800">{account.tipo}</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center bg-green-50 p-3 rounded-lg">
-                                                <BalanceIcon className="text-green-600 mr-3" />
-                                                <div>
-                                                    <span className="text-sm text-gray-600">Saldo: </span>
-                                                    <span className="ml-1 font-medium text-green-800">{account.saldo}</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center bg-purple-50 p-3 rounded-lg">
-                                                <CurrencyExchangeIcon className="text-purple-600 mr-3" />
-                                                <div>
-                                                    <span className="text-sm text-gray-600">Moneda: </span>
-                                                    <span className="ml-1 font-medium text-purple-800">{account.moneda}</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center bg-indigo-50 p-3 rounded-lg">
-                                                <BrandingWatermarkIcon className="text-indigo-600 mr-3" />
-                                                <div>
-                                                    <span className="text-sm text-gray-600">Banco: </span>
-                                                    <span className="ml-1 font-medium text-indigo-800">{account.entidadBancaria.name}</span>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center bg-gray-50 p-3 rounded-lg text-sm">
-                                                <CalendarMonthIcon className="text-gray-500 mr-3" />
-                                                <span className="text-gray-600">Apertura: {new Date(account.fechaApertura).toLocaleDateString()}</span>
-                                            </div>
-                                        </div>
-
-                                        {account.estado !== 'activa' && (
-                                            <div className="mt-4 pt-4 border-t border-gray-200">
-                                                <Button
-                                                    fullWidth
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={() => handleAprobarCuentaBancaria(account.numeroCuenta)}
-                                                    className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
-                                                    startIcon={<CheckCircleIcon />}
-                                                >
-                                                    Aprobar cuenta
-                                                </Button>
-                                            </div>
-                                        )}
-                                        {account.estado !== 'bloqueada' && (
-                                            <div className="mt-4 pt-4 border-t border-gray-200">
-                                                <Button
-                                                    fullWidth
-                                                    variant="contained"
-                                                    color="primary"
-                                                    onClick={() => handleEliminarCuentaBancaria(account._id)}
-                                                    className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
-                                                    startIcon={<CheckCircleIcon />}
-                                                >
-                                                    Desactivar Cuenta
-                                                </Button>
-                                            </div>
-                                        )}
-                                    </div>
+                        {favoritos.length === 0 ? (
+                            <div className="text-center py-16 animate-fade-in">
+                                <div className="inline-block p-6 mb-6 rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 shadow-inner">
+                                    <StarBorderIcon className="text-gray-400 text-6xl" />
                                 </div>
-                            ))}
-                        </div>
+                                <h3 className="text-2xl font-medium text-gray-700 mb-2">No tienes favoritos aún</h3>
+                                <p className="text-gray-500 max-w-md mx-auto">
+                                    Agrega cuentas a tus favoritos para verlas aquí y acceder rápidamente
+                                </p>
+                                <button className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full font-medium shadow-md hover:shadow-lg transform transition hover:scale-105">
+                                    Explorar cuentas
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="mb-12 text-center animate-fade-in">
+                                    <h2 className="text-3xl font-bold text-gray-800 inline-flex items-center bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">
+                                        <StarIcon className="text-yellow-500 mr-3" />
+                                        {favoritos.length} {favoritos.length === 1 ? 'Cuenta Favorita' : 'Cuentas Favoritas'}
+                                    </h2>
+                                    <p className="mt-3 text-gray-500 max-w-2xl mx-auto">
+                                        Tus cuentas más utilizadas, siempre a un clic de distancia
+                                    </p>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                    {favoritos.map((favorito, index) => (
+                                        <div
+                                            key={favorito._id}
+                                            className={`card-animation relative bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border border-gray-100 hover:border-blue-200`}
+                                            style={{ animationDelay: `${index * 0.1}s` }}
+                                        >
+                                            <div className="absolute -top-3 -right-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg transform rotate-6 z-10">
+                                                <StarIcon className="text-white" />
+                                            </div>
+                                            <div className="relative p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 overflow-hidden">
+                                                <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-blue-200 opacity-20"></div>
+                                                <div className="absolute -right-5 -top-5 w-20 h-20 rounded-full bg-indigo-200 opacity-20"></div>
+
+                                                <div className="flex items-center relative z-10">
+                                                    <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 rounded-xl shadow-md mr-4">
+                                                        <AccountBalanceIcon className="text-white text-2xl" />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-xl font-bold text-gray-800">
+                                                            {favorito.cuentaDestino.numeroCuenta}
+                                                        </h3>
+                                                        <p className="text-blue-600 text-sm font-medium">
+                                                            {favorito.cuentaDestino.tipo}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="p-6 relative">
+                                                <div className="mb-5 space-y-5">
+                                                    <div className="flex items-center">
+                                                        <div className="bg-gradient-to-r from-indigo-100 to-purple-100 p-2 rounded-xl mr-3 shadow-sm">
+                                                            <FaceIcon className="text-indigo-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-gray-500 uppercase tracking-wider">Propietario</p>
+                                                            <p className="font-semibold text-gray-800">
+                                                                {favorito.cuentaDestino.propietario.name}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <div className="bg-gradient-to-r from-green-100 to-teal-100 p-2 rounded-xl mr-3 shadow-sm">
+                                                            <BalanceIcon className="text-green-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-gray-500 uppercase tracking-wider">Moneda</p>
+                                                            <p className="font-semibold text-gray-800">
+                                                                {favorito.cuentaDestino.moneda}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-2 rounded-xl mr-3 shadow-sm">
+                                                            <CurrencyExchangeIcon className="text-purple-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-gray-500 uppercase tracking-wider">Banco</p>
+                                                            <p className="font-semibold text-gray-800">
+                                                                {favorito.cuentaDestino.entidadBancaria.name}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center">
+                                                        <div className="bg-gradient-to-r from-yellow-100 to-amber-100 p-2 rounded-xl mr-3 shadow-sm">
+                                                            <BrandingWatermarkIcon className="text-yellow-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-xs text-gray-500 uppercase tracking-wider">Alias</p>
+                                                            <p className="font-semibold text-gray-800">
+                                                                {favorito.alias}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
-
-            <style jsx global>{`
-                @keyframes fadeInLeft {
-                    from {
-                        opacity: 0;
-                        transform: translateX(-20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateX(0);
-                    }
-                }
-                
-                @keyframes fadeInRight {
-                    from {
-                        opacity: 0;
-                        transform: translateX(20px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translateX(0);
-                    }
-                }
-                
-                .animate-fade-in-left {
-                    animation: fadeInLeft 0.6s ease-out forwards;
-                }
-                
-                .animate-fade-in-right {
-                    animation: fadeInRight 0.6s ease-out forwards;
-                }
-            `}</style>
         </Layout>
     );
 }
+
+export default Favorites;

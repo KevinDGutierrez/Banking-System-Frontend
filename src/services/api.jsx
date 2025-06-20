@@ -37,65 +37,52 @@ export const login = async (data) => {
 export const register = async (data) => {
     return await apiClient.post('users/register', data);
 }
-
 export const resetPassword = async ( data) => {
     return await apiClient.post('users/reset', data);
 }
-
 export const solicitarRecuperacion = async (data) => {
     return await apiClient.post('users/recuperacion', data);
 }
-
 export const getBanking = async () => {
     return await apiClient.get('/bancos/');
 }
-
-
-
 export const AprobarCuentaBancaria = async (numeroCuenta) => {
     return await apiClient.put(`cuentas/${numeroCuenta}/aprobar`);
 }
-
 export const getClientesByAdmin = async () => {
     return await apiClient.get('users/clientes');
 }
-
 export const AprobarCliente = async (id) => {
     return await apiClient.put(`users/${id}/aprobar`);
 }
-
 export const deleteCliente = async (id) => {
     return await apiClient.delete(`users/${id}`);
 }
-
 export const deleteAccounts = async (id) => {
     return await apiClient.delete(`cuentas/${id}`);
 }
-
 export const addAccountBanking = async (data) => {
     return await apiClient.post('cuentas/', data);
 }
-
 export const getAccountUserBanking = async () => {
     return await apiClient.get('cuentas/usuario');
 }
-
 export const getOpciones = async () => {
   return await apiClient.get('cuentas/opciones');
 }
-
 export const getAccountsBanking = async () => {
     return await apiClient.get('/cuentas/todas');
 }
-
 export const getFavorites = async () => {
     return await apiClient.get('/favoritos/');
 }
-
 export const addFavorite = async (data) => {
     return await apiClient.post('favoritos/', data);
 }
-
+export const myAccount = async (data) => {
+    console.log(data)
+    return await apiClient.put('users/clientes', data)
+};
 
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
