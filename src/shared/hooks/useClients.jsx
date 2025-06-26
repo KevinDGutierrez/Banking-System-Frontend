@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 
 
 
-export const useClients =  () => {
+export const useClients = () => {
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -55,37 +55,9 @@ export const useClients =  () => {
         }
     }
 
-    const handleDeleteCliente = async (id) => {
-        try {
-            setLoading(true);
-            const response = await deleteCliente(id);
-            console.log(response);
-
-            Swal.fire({
-                title: 'Cliente Eliminado',
-                text: 'El cliente ha sido eliminado exitosamente',
-                icon: 'success',
-                timer: 1500,
-                background: '#1f2937',
-                color: 'white',
-                customClass: {
-                    popup: 'animate__animated animate__fadeInDown',
-                }
-            });
-            await handleGetClientes();
-        } catch (error) {
-            const backendError = error.response?.data;
-            Swal.fire({
-                title: 'Error',
-                text: backendError?.error || backendError?.msg || 'Error',
-                icon: 'error',
-            });
-        } finally {
-            setLoading(false);
-        }
-    }
+    
 
 
-    return {clientes, handleGetClientes, handleAprobarCliente, handleDeleteCliente};
+    return { clientes, handleGetClientes, handleAprobarCliente };
 
 }

@@ -60,7 +60,7 @@ export const AppRoutes = () => {
                 </PrivateRoute>
             )
         },
-        { 
+        {
             path: "/accountBanking", element: (
                 <PrivateRoute roles={["CLIENTE"]}>
                     <AccountClient />

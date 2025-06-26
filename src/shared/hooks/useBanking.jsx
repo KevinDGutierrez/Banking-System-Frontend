@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import { getBanking } from '../../services/api';
 import Swal from 'sweetalert2';
 
@@ -22,5 +22,5 @@ export const useBanking = () => {
             setLoading(false);
         }
     }
-    return {banking, handleGetBanking};
+    return { banking, handleGetBanking };
 }

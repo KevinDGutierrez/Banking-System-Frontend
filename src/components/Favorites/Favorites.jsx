@@ -72,9 +72,7 @@ const Favorites = () => {
                                 <p className="text-gray-500 max-w-md mx-auto">
                                     Agrega cuentas a tus favoritos para verlas aquí y acceder rápidamente
                                 </p>
-                                <button className="mt-6 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full font-medium shadow-md hover:shadow-lg transform transition hover:scale-105">
-                                    Explorar cuentas
-                                </button>
+
                             </div>
                         ) : (
                             <>

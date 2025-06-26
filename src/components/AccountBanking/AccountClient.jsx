@@ -42,7 +42,7 @@ const AccountClient = () => {
             entidadBancaria: '',
             saldo: 0
         });
-        await handleGetAccountBankingUser(); 
+        await handleGetAccountBankingUser();
     };
 
     if (isLoading) {
@@ -144,10 +144,10 @@ const AccountClient = () => {
                                 >
                                     <option value="">Seleccione un banco</option>
                                     {banking.map((bank) => (
-                                            <option key={bank.name} value={bank.name}>
-                                                {bank.name}
-                                            </option>
-                                        ))}
+                                        <option key={bank.name} value={bank.name}>
+                                            {bank.name}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
 

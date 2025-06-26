@@ -53,6 +53,6 @@ export const useFavorites = () => {
         }
     }
 
-    return {favoritos, handleGetFavorites, handleAddFavorite};
+    return { favoritos, handleGetFavorites, handleAddFavorite };
 
 }

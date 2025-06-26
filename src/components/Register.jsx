@@ -142,36 +142,35 @@ export const Register = ({ switchAuthHandler }) => {
       : { isValid: true, message: "" };
   };
 
-  const SelectInput = ({ field, label, value, onChangeHandler, onBlurHandler, showErrorMessage, validationMessage, icon : Icon, options }) => 
-     (<div className="flex flex-col space-y-1">
-      <label className="text-sm font-medium text-gray-700">{label}</label>
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Icon className="h-5 w-5 text-gray-400" />
-        </div>
-        <select
-          className={`block w-full pl-10 pr-3 py-2 border ${
-            showErrorMessage ? "border-red-500" : "border-gray-300"
-          } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
-          value={value}
-         onChange={(e) => {
-          onChangeHandler(e.target.value, field);
-          onBlurHandler(e.target.value, field); 
-        }} 
-          onBlur={(e) => onBlurHandler(e.target.value, field)}
-        >
-          <option value="">Seleccione una opción</option>
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+  const SelectInput = ({ field, label, value, onChangeHandler, onBlurHandler, showErrorMessage, validationMessage, icon: Icon, options }) =>
+  (<div className="flex flex-col space-y-1">
+    <label className="text-sm font-medium text-gray-700">{label}</label>
+    <div className="relative">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <Icon className="h-5 w-5 text-gray-400" />
       </div>
-      {showErrorMessage && (
-        <p className="mt-1 text-sm text-red-600">{validationMessage}</p>
-      )}
+      <select
+        className={`block w-full pl-10 pr-3 py-2 border ${showErrorMessage ? "border-red-500" : "border-gray-300"
+          } rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+        value={value}
+        onChange={(e) => {
+          onChangeHandler(e.target.value, field);
+          onBlurHandler(e.target.value, field);
+        }}
+        onBlur={(e) => onBlurHandler(e.target.value, field)}
+      >
+        <option value="">Seleccione una opción</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </select>
     </div>
+    {showErrorMessage && (
+      <p className="mt-1 text-sm text-red-600">{validationMessage}</p>
+    )}
+  </div>
   );
 
   const handleInputValidationOnBlur = (value, field) => {
@@ -283,7 +282,7 @@ export const Register = ({ switchAuthHandler }) => {
   };
 
   const handlePasswordChange = (value, field) => {
-     console.log(`contraseña: ${field}, Valor:`, value);
+    console.log(`contraseña: ${field}, Valor:`, value);
     handleInputValueChange(value, field);
     setPasswordStrength(evaluarPassword(value));
   };
@@ -477,14 +476,14 @@ export const Register = ({ switchAuthHandler }) => {
                       <div className="mt-1">
                         <span className="text-xs font-medium">Fortaleza: </span>
                         <span className={`text-xs font-bold ${passwordStrength === "Baja" ? "text-red-600" :
-                            passwordStrength === "Media" ? "text-yellow-600" : "text-green-600"
+                          passwordStrength === "Media" ? "text-yellow-600" : "text-green-600"
                           }`}>
                           {passwordStrength}
                         </span>
                         <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
                           <div
                             className={`h-1.5 rounded-full ${passwordStrength === "Baja" ? "bg-red-600 w-1/3" :
-                                passwordStrength === "Media" ? "bg-yellow-600 w-2/3" : "bg-green-600 w-full"
+                              passwordStrength === "Media" ? "bg-yellow-600 w-2/3" : "bg-green-600 w-full"
                               }`}
                           ></div>
                         </div>
@@ -519,11 +518,10 @@ export const Register = ({ switchAuthHandler }) => {
                 <button
                   type="submit"
                   disabled={isSubmitButtonDisable}
-                  className={`w-full py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-                    isSubmitButtonDisable
+                  className={`w-full py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isSubmitButtonDisable
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-blue-600 hover:bg-blue-700 text-white"
-                  }`}
+                    }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">

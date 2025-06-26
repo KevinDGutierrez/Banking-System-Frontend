@@ -4,7 +4,7 @@ import { logout } from "../shared/hooks/useLogout"
 
 const apiClient = axios.create({
     baseURL : 'https://banking-system-backend-production.up.railway.app/',
-    timeout : 5000
+    timeout: 5000
 })
 
 
@@ -12,16 +12,16 @@ apiClient.interceptors.request.use(
     (config) => {
         const storedUser = localStorage.getItem("user")
 
-        if(storedUser) {
-           try {
-             const {token} = JSON.parse(storedUser)
-            if (token ) {
-                config.headers["x-token"] = token;
+        if (storedUser) {
+            try {
+                const { token } = JSON.parse(storedUser)
+                if (token) {
+                    config.headers["x-token"] = token;
+                }
+            } catch (error) {
+                console.error("Error al parsear el usuario en localStorage:", error)
             }
-           } catch (error) {
-            console.error("Error al parsear el usuario en localStorage:", error)
-           }
-        } 
+        }
         return config;
     },
     (error) => {
@@ -37,7 +37,7 @@ export const login = async (data) => {
 export const register = async (data) => {
     return await apiClient.post('users/register', data);
 }
-export const resetPassword = async ( data) => {
+export const resetPassword = async (data) => {
     return await apiClient.post('users/reset', data);
 }
 export const solicitarRecuperacion = async (data) => {
@@ -68,7 +68,7 @@ export const getAccountUserBanking = async () => {
     return await apiClient.get('cuentas/usuario');
 }
 export const getOpciones = async () => {
-  return await apiClient.get('cuentas/opciones');
+    return await apiClient.get('cuentas/opciones');
 }
 export const getAccountsBanking = async () => {
     return await apiClient.get('/cuentas/todas');
@@ -83,6 +83,25 @@ export const myAccount = async (data) => {
     console.log(data)
     return await apiClient.put('users/clientes', data)
 };
+
+export const myAccountApplication = async (data) => {
+    console.log(data)
+    return await apiClient.put('users/clientes/solicitud', data)
+};
+
+export const myAccountList = async (data) => {
+    console.log(data)
+    return await apiClient.get('users/myAccount', data)
+};
+
+export const updateClienteAdmin = async (id, data) => {
+    return await apiClient.put(`users/admin/${id}`, data);
+}
+
+export const getDatosPendientes = async () => {
+    return await apiClient.get(`users/clientes/datos`);
+}
+
 
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
