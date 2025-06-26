@@ -14,7 +14,7 @@ const AdminDashboard = () => {
     <div className="min-h-screen bg-gray-100">
       <Navbar toggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      
+
       <main className="pt-20 px-4 md:ml-64 transition-all duration-300">
         <div className="container mx-auto py-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -23,7 +23,7 @@ const AdminDashboard = () => {
               { title: 'Cuentas Activas', value: '856', change: '+5%', icon: '💳', color: 'bg-green-500' },
               { title: 'Transacciones Hoy', value: '324', change: '-3%', icon: '🔄', color: 'bg-purple-500' },
             ].map((stat, index) => (
-              <div 
+              <div
                 key={index}
                 className={`${stat.color} text-white p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-xl`}
               >

@@ -27,7 +27,7 @@ export const useLogin = () => {
 
     const showAlert = (type, title, text, timer = null) => {
         const settings = alertSettings[type];
-        
+
         return Swal.fire({
             icon: type,
             title: `<span class="text-xl font-bold ${settings.textColor}">${title}</span>`,
@@ -35,14 +35,14 @@ export const useLogin = () => {
             timer: timer,
             showConfirmButton: timer ? false : true,
             background: '#1f2937',
-            backdrop: type === 'success' ? 
-                'rgba(59, 130, 246, 0.15)' : 
+            backdrop: type === 'success' ?
+                'rgba(59, 130, 246, 0.15)' :
                 'rgba(239, 68, 68, 0.15)',
             customClass: {
                 popup: `rounded-xl border ${settings.borderColor} shadow-lg`,
                 icon: `${settings.iconColor} border-${type}-100`,
-                confirmButton: `px-4 py-2 rounded-lg ${type === 'success' ? 
-                    'bg-blue-600 hover:bg-blue-700 text-white' : 
+                confirmButton: `px-4 py-2 rounded-lg ${type === 'success' ?
+                    'bg-blue-600 hover:bg-blue-700 text-white' :
                     'bg-red-600 hover:bg-red-700 text-white'} focus:ring-2 focus:ring-${type}-300`
             },
             showClass: {
@@ -66,20 +66,20 @@ export const useLogin = () => {
 
             const { userDetails } = response.data;
             localStorage.setItem("user", JSON.stringify(userDetails));
-            
+
             await showAlert(
-                'success', 
-                'Inicio de sesión exitoso', 
-                'Bienvenido a Banco Innova!', 
+                'success',
+                'Inicio de sesión exitoso',
+                'Bienvenido a Banco Innova!',
                 3000
             );
-            
+
             navigate("/dashboard", { state: { "message": "Inicio de sesión exitoso" } });
         } catch (error) {
             const errorMsg = error.response?.data;
             showAlert(
-                'error', 
-                'Error al iniciar sesión', 
+                'error',
+                'Error al iniciar sesión',
                 errorMsg?.error || errorMsg?.msg || 'Ocurrió un error inesperado. Por favor, intenta de nuevo'
             );
         } finally {
@@ -91,15 +91,15 @@ export const useLogin = () => {
         try {
             const response = await solicitarRecuperacion(data);
             console.log("Recuperación solicitada:", response);
-            
+
             await showAlert(
                 'success',
                 'Recuperación solicitada',
                 'Hemos enviado un enlace de recuperación a tu correo electrónico',
                 3000
             );
-            
-            
+
+
         } catch (error) {
             const errorMsg = error.response?.data;
             showAlert(
@@ -112,19 +112,19 @@ export const useLogin = () => {
         }
     };
 
-    const handleResetPassword = async ( data) => {
+    const handleResetPassword = async (data) => {
         try {
-            console .log("Datos de reseteo de contraseña:", data);
+            console.log("Datos de reseteo de contraseña:", data);
             const response = await resetPassword(data);
             console.log("Contraseña restablecida:", response);
-            
+
             await showAlert(
                 'success',
                 'Contraseña actualizada',
                 'Tu contraseña ha sido restablecida exitosamente',
                 3000
             );
-            
+
             navigate("/");
         } catch (error) {
             const errorMsg = error.response?.data;
