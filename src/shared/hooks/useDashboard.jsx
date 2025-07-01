@@ -138,3 +138,18 @@ export const useProductoAdmin = () => {
 
     return { adminProductos, handleAdminProductos };
 }
+
+export const useOrdenCliente = () => {
+    const [clienteOrdenes, setClienteOrdenes] = useState([]);
+    const navigate = useNavigate();
+
+    const handleClienteOrdenes = async () => {
+        try {
+            navigate("/clienteOrdenes", { state: { message: "Bienvenido a la lista de ordenes" } });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    return { clienteOrdenes, handleClienteOrdenes };
+}

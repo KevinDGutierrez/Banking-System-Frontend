@@ -150,6 +150,18 @@ export const deleteCredito = async (id) => {
     return await apiClient.delete(`creditos/${id}`);
 }
 
+export const postOrden = async (data) => {
+    return await apiClient.post('ordenes/postOrden', data);
+}
+
+export const getOrdenesProductos = async () => {
+    return await apiClient.get('ordenes/getOrdenesProductos');
+}
+
+export const getOrdenesServicios = async () => {
+    return await apiClient.get('ordenes/getOrdenesServicios');
+}
+
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
 

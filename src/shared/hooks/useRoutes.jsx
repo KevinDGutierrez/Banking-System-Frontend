@@ -16,6 +16,8 @@ import CreditoClient from "../../components/creditos/CreditoClient.jsx"
 import CreditoAdmin from "../../components/creditos/CreditoAdmin.jsx"
 import Favorites from "../../components/Favorites/Favorites.jsx"
 import MyAccount from "../../components/MyAccount/MyAccount.jsx"
+import OrdenComponent from "../../components/Ordenes/Orden.jsx"
+
 export const AppRoutes = () => {
     const routes = useRoutes([
         { path: "/", element: <Login /> },
@@ -102,6 +104,13 @@ export const AppRoutes = () => {
             path: "/myAccount", element: (
                 <PrivateRoute roles={["CLIENTE"]}>
                     <MyAccount />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/clienteOrdenes", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <OrdenComponent />
                 </PrivateRoute>
             )
         }

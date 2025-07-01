@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Wallet, User, Banknote,
-  Users, Shield, ChevronLeft, CreditCard, Package
+  Users, Shield, ChevronLeft, CreditCard, Package, Tags
 } from 'lucide-react';
 import { useAccountBanking } from '../../shared/hooks/useDashboard';
 import { useBanking } from '../../shared/hooks/useDashboard';
@@ -13,6 +13,7 @@ import { useSolicitarCredito } from '../../shared/hooks/useDashboard';
 import { useAprobarCredito } from '../../shared/hooks/useDashboard';
 import { userFavorites } from '../../shared/hooks/useDashboard';
 import { useProductoAdmin } from '../../shared/hooks/useDashboard';
+import { useOrdenCliente } from '../../shared/hooks/useDashboard';
  
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -25,12 +26,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     const { aprobarCredito, handleAprobarCredito } = useAprobarCredito();
     const { myAccount, handleMyAccount } = useMyAccount();
     const { adminProductos, handleAdminProductos } = useProductoAdmin();
+    const { clienteOrdenes, handleClienteOrdenes } = useOrdenCliente();
  
   const clientSections = [
     { text: 'Cuenta Bancaria', icon: <Wallet className="h-5 w-5"  />, action : handleAccountBanking },
     { text: 'Creditos', icon: <CreditCard className="h-5 w-5"  />, action : handleSolicitarCredito },
     { text: 'Bancos', icon: <Banknote className="h-5 w-5"  />, action : handleBanking },
     { text: 'Mi Cuenta', icon: <Users className="h-5 w-5"/>, action : handleMyAccount },
+    { text: 'Mis Ordenes', icon: <Tags className="h-5 w-5"/>, action : handleClienteOrdenes },
   ];
  
   const adminSections = [
