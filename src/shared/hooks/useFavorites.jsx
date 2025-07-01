@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { AprobarCliente, getClientesByAdmin, deleteCliente } from "../../services/api";
+import { getFavorites, addFavorite } from "../../services/api";
 import Swal from "sweetalert2";
 
-
-
-export const useClients = () => {
-    const [clientes, setClientes] = useState([]);
+export const useFavorites = () => {
+    const [favoritos, setFavoritos] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const handleGetClientes = async () => {
+    const handleGetFavorites = async () => {
         try {
-            const response = await getClientesByAdmin();
+            const response = await getFavorites();
             console.log(response);
-            setClientes(response.data);
+            setFavoritos(response.data);
         } catch (error) {
             const backendError = error.response?.data;
             Swal.fire({
@@ -25,15 +23,15 @@ export const useClients = () => {
         }
     }
 
-    const handleAprobarCliente = async (id) => {
+    const handleAddFavorite = async (data) => {
         try {
             setLoading(true);
-            const response = await AprobarCliente(id);
+            const response = await addFavorite(data);
             console.log(response);
 
             Swal.fire({
-                title: 'Cliente Aprobado',
-                text: 'El cliente ha sido aprobado exitosamente',
+                title: 'Favorito agregado',
+                text: 'El favorito ha sido agregado exitosamente',
                 icon: 'success',
                 timer: 1500,
                 background: '#1f2937',
@@ -42,7 +40,7 @@ export const useClients = () => {
                     popup: 'animate__animated animate__fadeInDown',
                 }
             });
-            await handleGetClientes();
+            await handleGetFavorites();
         } catch (error) {
             const backendError = error.response?.data;
             Swal.fire({
@@ -55,9 +53,6 @@ export const useClients = () => {
         }
     }
 
-    
-
-
-    return { clientes, handleGetClientes, handleAprobarCliente };
+    return { favoritos, handleGetFavorites, handleAddFavorite };
 
 }

@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../layout/Layout";
 import { useProductos } from "../../shared/hooks/useProductos";
-import { Calendar, Package, DollarSign, Boxes, PlusCircle } from "lucide-react";
+import { Calendar, Package, DollarSign, Boxes, PlusCircle, Trash } from "lucide-react";
+import Swal from "sweetalert2";
 
 const ProductosComponent = () => {
-    const { productos, loading, handleGetProductos, handlePostProducto } = useProductos();
+    const {
+        productos,
+        loading,
+        handleGetProductos,
+        handlePostProducto,
+        handleDeleteProducto,
+    } = useProductos();
 
     const [formData, setFormData] = useState({
         nombre: '',
@@ -13,7 +20,9 @@ const ProductosComponent = () => {
         moneda: 'GTQ',
         existencias: '',
         puntos: ''
-    });
+    })
+
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         handleGetProductos();
@@ -22,7 +31,11 @@ const ProductosComponent = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-    };
+    }
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,7 +44,7 @@ const ProductosComponent = () => {
             precio: parseFloat(formData.precio),
             existencias: parseInt(formData.existencias),
             puntos: parseInt(formData.puntos)
-        };
+        }
         await handlePostProducto(data, true);
         setFormData({
             nombre: '',
@@ -40,8 +53,25 @@ const ProductosComponent = () => {
             moneda: 'GTQ',
             existencias: '',
             puntos: ''
-        });
-    };
+        })
+    }
+
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        })
+
+        if (result.isConfirmed) {
+            await handleDeleteProducto(id);
+        }
+    }
 
     if (loading) {
         return (
@@ -50,12 +80,27 @@ const ProductosComponent = () => {
                     <div className="spinner-border text-primary" role="status"></div>
                 </div>
             </Layout>
-        );
+        )
     }
+
+    const productosFiltrados = productos.filter(p =>
+        p.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+    )
 
     return (
         <Layout>
             <div className="container py-5">
+
+                <div className="mb-4">
+                    <input
+                        type="text"
+                        placeholder="Buscar producto por nombre..."
+                        className="form-control"
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                    />
+                </div>
+
                 <div className="card shadow mb-5">
                     <div className="card-header bg-primary text-white d-flex align-items-center">
                         <PlusCircle className="me-2" size={20} />
@@ -138,10 +183,10 @@ const ProductosComponent = () => {
                 </div>
 
                 <div className="row g-4">
-                    {productos.length === 0 ? (
-                        <p className="text-center text-muted">No hay productos disponibles!</p>
+                    {productosFiltrados.length === 0 ? (
+                        <p className="text-center text-muted">No hay productos que coincidan con la búsqueda!</p>
                     ) : (
-                        productos.map((producto) => (
+                        productosFiltrados.map((producto) => (
                             <div className="col-md-6 col-lg-4" key={producto._id || producto.id}>
                                 <div className="card h-100 shadow-sm border-0">
                                     <div className="card-body d-flex flex-column">
@@ -157,7 +202,7 @@ const ProductosComponent = () => {
                                             </li>
                                             <li className="d-flex align-items-center mb-2 text-success">
                                                 <DollarSign className="me-2" size={18} />
-                                                <strong>Precio Original:</strong> {producto.precioOriginal.valor} {producto.precioOriginal.moneda}
+                                                <strong>Precio Original:</strong> {producto.precioOriginal?.valor} {producto.precioOriginal?.moneda}
                                             </li>
 
                                             {producto.preciosConvertidos && (
@@ -187,6 +232,15 @@ const ProductosComponent = () => {
                                                 Agregado: {new Date(producto.createdAt).toLocaleDateString()}
                                             </li>
                                         </ul>
+
+                                        <div className="mt-auto d-flex justify-content-end">
+                                            <button
+                                                className="btn btn-sm btn-outline-danger"
+                                                onClick={() => handleDelete(producto._id || producto.id)}
+                                            >
+                                                <Trash size={16} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +249,7 @@ const ProductosComponent = () => {
                 </div>
             </div>
         </Layout>
-    );
-};
+    )
+}
 
 export default ProductosComponent;

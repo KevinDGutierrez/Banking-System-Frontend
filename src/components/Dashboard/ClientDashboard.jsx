@@ -14,17 +14,17 @@ const ClientDashboard = () => {
     <div className="min-h-screen bg-gray-100">
       <Navbar toggleSidebar={toggleSidebar} />
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-      
+
       <main className="pt-20 px-4 md:ml-64 transition-all duration-300">
         <div className="container mx-auto py-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Bienvenido a tu Banco Digital</h1>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               { title: 'Saldo Actual', value: '$12,345.67', icon: '💰', color: 'bg-indigo-600' },
               { title: 'Última Transacción', value: '$450.00', icon: '🛒', color: 'bg-teal-600' },
             ].map((card, index) => (
-              <div 
+              <div
                 key={index}
                 className={`${card.color} text-white p-6 rounded-xl shadow-lg transform hover:scale-[1.02] transition-all duration-300 hover:shadow-xl`}
               >
@@ -47,8 +47,8 @@ const ClientDashboard = () => {
                 { id: 2, description: 'Depósito de nómina', amount: '+$1,200.00', date: 'Ayer', icon: '💵' },
                 { id: 3, description: 'Transferencia a Juan', amount: '-$300.00', date: '15/06', icon: '↗️' },
               ].map(movement => (
-                <div 
-                  key={movement.id} 
+                <div
+                  key={movement.id}
                   className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-all duration-200"
                 >
                   <div className="flex items-center space-x-3">

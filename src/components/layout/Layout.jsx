@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
         <div className="min-h-screen bg-gray-100">
             <Navbar toggleSidebar={toggleSidebar} />
             <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
-            
+
             <main className={`pt-20 transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
                 {children}
             </main>

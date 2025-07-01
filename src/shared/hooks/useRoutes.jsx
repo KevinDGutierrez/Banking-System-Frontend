@@ -12,7 +12,10 @@ import AccountBankingAdmin from "../../components/AccountBanking/AccoutAdmin.jsx
 import ClienteAdmin from "../../components/Client/ClienteAdmin.jsx"
 import ProductosComponent from "../../components/Producto/Producto.jsx"
 import AccountClient from "../../components/AccountBanking/AccountClient.jsx"
-
+import CreditoClient from "../../components/creditos/CreditoClient.jsx"
+import CreditoAdmin from "../../components/creditos/CreditoAdmin.jsx"
+import Favorites from "../../components/Favorites/Favorites.jsx"
+import MyAccount from "../../components/MyAccount/MyAccount.jsx"
 export const AppRoutes = () => {
     const routes = useRoutes([
         { path: "/", element: <Login /> },
@@ -73,8 +76,35 @@ export const AppRoutes = () => {
                     <AccountClient />
                 </PrivateRoute>
             )
+        },
+        { 
+            path: "/solicitudCredito", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <CreditoClient />
+                </PrivateRoute>
+            )
+        },
+        { 
+            path: "/aprobarCredito", element: (
+                <PrivateRoute roles={["ADMIN"]}>
+                    <CreditoAdmin />
+                    </PrivateRoute>
+            )
+        },
+        {
+            path: "/favoritos", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <Favorites />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/myAccount", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <MyAccount />
+                </PrivateRoute>
+            )
         }
-
     ])
 
     return routes;

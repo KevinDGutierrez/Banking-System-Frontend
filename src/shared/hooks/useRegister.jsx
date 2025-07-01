@@ -45,7 +45,7 @@ export const useRegister = () => {
     const showErrorAlert = async (error) => {
         const backendError = error.response?.data;
         const errorMessage = backendError?.error || backendError?.msg || 'Ocurrió un error inesperado. Por favor, intenta de nuevo';
-        
+
         Swal.fire({
             icon: 'error',
             title: '<span class="text-red-600 text-2xl font-semibold">Error en el registro</span>',
