@@ -18,6 +18,7 @@ const CreditoClient = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [formData, setFormData] = useState({
         montoSolicitado: 0,
+        montoAprobado: 0,
         plazo: 0,
         moneda: 'GTQ',
         numeroCuenta: ''
@@ -48,7 +49,7 @@ const CreditoClient = () => {
         if (montoSolicitado <= 0 || plazo <= 0 || !numeroCuenta) {
             Swal.fire({
                 title: 'Error',
-                text: 'Por favor, ingresa valores válidos para monto, plazo y selecciona una cuenta.',
+                text: 'Por favor, ingresa valores válidos para monto, plazo y selecciona una cuenta',
                 icon: 'warning',
                 confirmButtonText: 'Aceptar'
             })
@@ -151,14 +152,15 @@ const CreditoClient = () => {
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-gray-700 flex items-center gap-1">
                                     <AttachMoneyIcon className='me-3' />
-                                    Monto
+                                    Monto Solicitado
                                 </label>
                                 <input
                                     type="number"
                                     name="montoSolicitado"
                                     value={formData.montoSolicitado}
                                     onChange={handleInputChange}
-                                    min="1"
+                                    min="1000"
+                                    max="1000000"
                                     step="0.01"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                                     required
@@ -175,7 +177,8 @@ const CreditoClient = () => {
                                     name="plazo"
                                     value={formData.plazo}
                                     onChange={handleInputChange}
-                                    min="1"
+                                    min="6"
+                                    max="36"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                                     required
                                 />
@@ -244,8 +247,8 @@ const CreditoClient = () => {
                                                         <span>{credito.montoSolicitado} {credito.moneda}</span>
                                                     </div>
 
-                                                    <span className={`px-4 py-1 text-xs font-semibold rounded-full select-none ${credito.status === true ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                                                        {credito.status === true ? 'Aprobado' : 'Pendiente'}
+                                                    <span className={`px-4 py-1 text-xs font-semibold rounded-full select-none ${credito.status === true ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' && credito.activo === false ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                                        {credito.status === true ? 'Aprobado' : 'Pendiente' && credito.activo === false ? 'No Aprobado' : 'Pendiente'}
                                                     </span>
                                                 </div>
 
