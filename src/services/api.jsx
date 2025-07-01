@@ -122,6 +122,38 @@ export const deleteCredito = async (id) => {
     return await apiClient.delete(`creditos/${id}`);
 }
 
+export const getDeposits = async () => {
+    return await apiClient.get('depositos/');
+}
+
+export const getDepositsById = async (id) => {
+    return await apiClient.get(`depositos/${id}`);
+}
+
+export const getDepositsByAccount = async (cuenta) => {
+    return await apiClient.get(`depositos/${cuenta}`);
+}
+
+export const postDeposits = async (data) => {
+    return await apiClient.post('depositos/', data)
+}
+
+export const postDepositsExchange = async (data) => {
+    return await apiClient.post('depositos/exchange', data)
+}
+
+export const putDeposits = async (id, data) => {
+    return await apiClient.put(`depositos/${id}`, data)
+}
+
+export const deleteDeposits = async (id) => {
+    return await apiClient.delete(`depositos/${id}`);
+}
+
+export const getStatsDeposits = async (id) => {
+    return await apiClient.get(`depositos/stats/${id}`)
+}
+
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
 
