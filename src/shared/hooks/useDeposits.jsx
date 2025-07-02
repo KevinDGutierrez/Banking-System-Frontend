@@ -2,8 +2,7 @@ import { useState } from "react";
 import { getDeposits, 
     getDepositsById, 
     getDepositsByAccount, 
-    postDeposits, 
-    postDepositsExchange, 
+    postDeposits,  
     putDeposits, 
     deleteDeposits } from "../../services/api";
 import Swal from "sweetalert2";
@@ -93,35 +92,6 @@ export const useDepositHook = () => {
         }
     }
 
-    const handlePostDepositExchange = async (data) => {
-        try {
-            setLoading(true);
-            const response = await postDepositsExchange(data)
-            console.log(response);
-
-            Swal.fire({
-                title:'Deposito Exitoso',
-                text:" El deposito fue generado correctamente, y adaptado a la moneda local",
-                icon: 'success',
-                timer: 1500,
-                background: '#1f2937',
-                color: 'white',
-                customClass: {
-                    popup: 'animate__animated animate__fadeInDown',
-                }
-            });
-            await handleGetDeposits();
-        } catch (error) {
-            const backendError = error.response?.data;
-            Swal.fire({
-                title: 'Error',
-                text: backendError?.error || backendError?.msg
-            })
-        }finally{
-            setLoading(false)
-        }
-    }
-
     const handlePutDeposit = async (id, data) => {
         const confirm = await Swal.fire({
             title: 'Confirmación',
@@ -170,6 +140,55 @@ export const useDepositHook = () => {
             }
         }
     } 
+
+    const handleDeleteDeposit = async (id, data) => {
+        const confirm = await Swal.fire({
+            title: 'Advertencia',
+            text: 'Esta seguro de eliminar el deposito?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Si, eliminar',
+            cancelButtonText: 'Cancelar',
+            background: '#1f2937',
+            color: 'white',
+            customClass: {
+                popup: 'animate__animated animate__fadeInDown swal-custom-zindex'
+            }
+        })
+
+        if(confirm.isConfirmed){
+            try{
+                setLoading(true);
+                const response = await deleteDeposits(id);
+                console.log(response.data, 'datos actualizados');
+
+                await Swal.fire({
+                    title: 'Deposito Eliminado',
+                    text: 'El deposito fue eliminado correctamente, por favor verificar datos',
+                    icon: 'success',
+                    timer: 1500,
+                    background: '#1f2937',
+                    color: 'white',
+                    customClass: {
+                        popup: 'animate__animated animate__fadeInDown swal-custom-zindex'
+                    }
+                });
+                await handleGetDeposits();
+            }catch (error) {
+                const backendError = error.response?.data;
+                Swal.fire({
+                    title: 'Error',
+                    text: backendError?.error || backendError?.msg || 'Error',
+                    icon: 'error',
+                    customClass: {
+                         popup: 'swal-custom-zindex'
+                    }
+                });
+            }finally{
+                setLoading(false);
+            }
+        }
+    } 
     return{
         deposits,
         loading,
@@ -177,8 +196,8 @@ export const useDepositHook = () => {
         handleGetDepositsById,
         handleGetDepositsByAccount,
         handlePostDeposit,
-        handlePostDepositExchange,
         handlePutDeposit,
-        handlePutDeposit
+        handlePutDeposit,
+        handleDeleteDeposit
     }
 }

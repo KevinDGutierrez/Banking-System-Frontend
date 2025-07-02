@@ -138,10 +138,6 @@ export const postDeposits = async (data) => {
     return await apiClient.post('depositos/', data)
 }
 
-export const postDepositsExchange = async (data) => {
-    return await apiClient.post('depositos/exchange', data)
-}
-
 export const putDeposits = async (id, data) => {
     return await apiClient.put(`depositos/${id}`, data)
 }
