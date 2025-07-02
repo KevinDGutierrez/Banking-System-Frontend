@@ -6,9 +6,8 @@ import { getDeposits,
     putDeposits, 
     deleteDeposits } from "../../services/api";
 import Swal from "sweetalert2";
-import Swal from "sweetalert2";
 
-export const useDepositHook = () => {
+export const useDeposit = () => {
     const [deposits, setDeposits] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -196,7 +195,6 @@ export const useDepositHook = () => {
         handleGetDepositsById,
         handleGetDepositsByAccount,
         handlePostDeposit,
-        handlePutDeposit,
         handlePutDeposit,
         handleDeleteDeposit
     }

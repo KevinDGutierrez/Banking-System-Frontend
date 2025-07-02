@@ -2,16 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Wallet, User, Banknote, 
-  Users, Shield, ChevronLeft, CreditCard
+  Users, Shield, ChevronLeft, CreditCard, BanknoteArrowDown
 } from 'lucide-react';
-import { useAccountBanking } from '../../shared/hooks/useDashboard';
-import { useBanking } from '../../shared/hooks/useDashboard';
-import { useClientesAdmin } from '../../shared/hooks/useDashboard';
-import { useAdminAccounts } from '../../shared/hooks/useDashboard';
-import { useMyAccount } from '../../shared/hooks/useDashboard';
-import { useSolicitarCredito } from '../../shared/hooks/useDashboard';
-import { useAprobarCredito } from '../../shared/hooks/useDashboard';
-import { userFavorites } from '../../shared/hooks/useDashboard';
+import { useAccountBanking,
+  useBanking,
+  useClientesAdmin,
+  useAdminAccounts, 
+  useMyAccount, 
+  useSolicitarCredito,
+  useAprobarCredito,
+  useAdminDeposits,
+  userFavorites} from '../../shared/hooks/useDashboard';
+
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     const { adminAccounts, handleAdminAccounts } = useAdminAccounts();
     const { solicitudCredito, handleSolicitarCredito } = useSolicitarCredito();
     const { aprobarCredito, handleAprobarCredito } = useAprobarCredito();
+    const {adminDeposit, handleAdminDeposits} = useAdminDeposits()
     const { myAccount, handleMyAccount } = useMyAccount();
 
   const clientSections = [
@@ -31,10 +34,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { text: 'Mi Cuenta', icon: <Users className="h-5 w-5"/>, action : handleMyAccount },
   ];
   
+  
   const adminSections = [
     { text: 'Gestión de Clientes', icon: <Users className="h-5 w-5"/>, action : handleClientesAdmin },
     { text: 'Gestión de Cuentas', icon: <Shield className="h-5 w-5" />, action : handleAdminAccounts },
     { text: 'Creditos', icon: <CreditCard className="h-5 w-5"  />, action : handleAprobarCredito },
+    { text: 'Depositos', icon: <BanknoteArrowDown className = "h-5  w-5"/>, action : handleAdminDeposits },
     { text: 'Bancos', icon: <Banknote className="h-5 w-5"  />, action : handleBanking },
   ];
 

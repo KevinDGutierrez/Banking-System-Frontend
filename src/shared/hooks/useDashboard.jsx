@@ -124,5 +124,18 @@ export const userFavorites = () => {
     return { favoritosClient, handleFavoritesClient };
 }
 
+export const useAdminDeposits = () =>{
+    const [adminDeposit, setAdminDeposit]= useState([]);
+    const navigate = useNavigate();
+
+    const handleAdminDeposits = async () => {
+        try {
+            navigate("/depositos", {state:{message: 'Welcome to deposits list'}})
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    return {adminDeposit, handleAdminDeposits};
+}
 
 
