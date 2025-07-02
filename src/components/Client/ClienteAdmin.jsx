@@ -197,7 +197,7 @@ const ClienteAdmin = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {clientes.map((cliente, index) => (
                                 <div
-                                    key={cliente._id}
+                                    key={cliente.uid}
                                     className={`bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-500 hover:shadow-2xl transform hover:-translate-y-2 ${index % 2 === 0 ? 'animate-fade-in-left' : 'animate-fade-in-right'
                                         }`}
                                     style={{ animationDelay: `${index * 100}ms` }}
@@ -338,7 +338,7 @@ const ClienteAdmin = () => {
                                                 <Button
                                                     fullWidth
                                                     variant="contained"
-                                                    onClick={() => handleAprobarClienteAdmin(cliente._id)}
+                                                    onClick={() => handleAprobarClienteAdmin(cliente.uid)}
                                                     className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] shadow-md hover:shadow-lg"
                                                     startIcon={<CheckCircleIcon size={18} />}
                                                 >
