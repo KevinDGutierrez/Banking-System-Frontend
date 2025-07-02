@@ -5,13 +5,7 @@ import { Calendar, Package, DollarSign, Boxes, PlusCircle, Trash } from "lucide-
 import Swal from "sweetalert2";
 
 const ProductosComponent = () => {
-    const {
-        productos,
-        loading,
-        handleGetProductos,
-        handlePostProducto,
-        handleDeleteProducto,
-    } = useProductos();
+    const { productos, loading, handleGetProductos, handlePostProducto, handleDeleteProducto } = useProductos();
 
     const [formData, setFormData] = useState({
         nombre: '',
@@ -71,16 +65,6 @@ const ProductosComponent = () => {
         if (result.isConfirmed) {
             await handleDeleteProducto(id);
         }
-    }
-
-    if (loading) {
-        return (
-            <Layout>
-                <div className="d-flex justify-content-center align-items-center min-vh-100">
-                    <div className="spinner-border text-primary" role="status"></div>
-                </div>
-            </Layout>
-        )
     }
 
     const productosFiltrados = productos.filter(p =>

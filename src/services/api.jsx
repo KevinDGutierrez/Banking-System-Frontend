@@ -2,7 +2,7 @@ import axios from "axios"
 import { logout } from "../shared/hooks/useLogout"
 
 const apiClient = axios.create({
-    baseURL : 'https://banking-system-backend-production.up.railway.app/',
+    baseURL: 'https://banking-system-backend-production.up.railway.app/',
     timeout: 5000
 })
 
@@ -35,7 +35,6 @@ export const register = async (data) => {
     return await apiClient.post('users/register', data);
 }
 
-
 export const updateCliente = async (data) => {
     return await apiClient.put(`users/${data}`);
 }
@@ -47,9 +46,11 @@ export const tipoCuenta = async (numeroCuenta) => {
 export const resetPassword = async (data) => {
     return await apiClient.post('users/reset', data);
 }
+
 export const solicitarRecuperacion = async (data) => {
     return await apiClient.post('users/recuperacion', data);
 }
+
 export const getBanking = async () => {
     return await apiClient.get('/bancos/');
 }
@@ -57,12 +58,15 @@ export const getBanking = async () => {
 export const AprobarCuentaBancaria = async (numeroCuenta) => {
     return await apiClient.put(`cuentas/${numeroCuenta}/aprobar`);
 }
+
 export const getClientesByAdmin = async () => {
     return await apiClient.get('users/clientes');
 }
+
 export const AprobarCliente = async (id) => {
     return await apiClient.put(`users/${id}/aprobar`);
 }
+
 export const deleteCliente = async (id) => {
     return await apiClient.delete(`users/${id}`);
 }
@@ -86,41 +90,49 @@ export const putProducto = async (id) => {
 export const deleteProducto = async (id) => {
     return await apiClient.delete(`productos/deleteProducto/${id}`);
 }
+
 export const deleteAccounts = async (id) => {
     return await apiClient.delete(`cuentas/${id}`);
 }
+
 export const addAccountBanking = async (data) => {
     return await apiClient.post('cuentas/', data);
 }
+
 export const getAccountUserBanking = async () => {
     return await apiClient.get('cuentas/usuario');
 }
+
 export const getOpciones = async () => {
     return await apiClient.get('cuentas/opciones');
 }
+
 export const getAccountsBanking = async () => {
     return await apiClient.get('/cuentas/todas');
 }
+
 export const getFavorites = async () => {
     return await apiClient.get('/favoritos/');
 }
+
 export const addFavorite = async (data) => {
     return await apiClient.post('favoritos/', data);
 }
+
 export const myAccount = async (data) => {
     console.log(data)
     return await apiClient.put('users/clientes', data)
-};
+}
 
 export const myAccountApplication = async (data) => {
     console.log(data)
     return await apiClient.put('users/clientes/solicitud', data)
-};
+}
 
 export const myAccountList = async (data) => {
     console.log(data)
     return await apiClient.get('users/myAccount', data)
-};
+}
 
 export const updateClienteAdmin = async (id, data) => {
     return await apiClient.put(`users/admin/${id}`, data);
@@ -160,6 +172,10 @@ export const getOrdenesProductos = async () => {
 
 export const getOrdenesServicios = async () => {
     return await apiClient.get('ordenes/getOrdenesServicios');
+}
+
+export const getServices = async () => {
+    return await apiClient.get('services/list-services');
 }
 
 const checkResponseStatus = (e) => {

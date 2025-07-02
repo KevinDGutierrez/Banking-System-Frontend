@@ -4,25 +4,19 @@ import { PlusCircle, Trash, DollarSign, Package, Calendar } from "lucide-react";
 import { useOrdenes } from "../../shared/hooks/useOrdenes";
 
 const OrdenComponent = () => {
-    const {
-        handlePostOrden,
-        handleGetProductos,
-        handleGetOrdenesProductos,
-        productos,
-        ordenes,
-        loading
-    } = useOrdenes();
+    const { handlePostOrden, handleGetProductos, handleGetServices, handleGetOrdenesProductos, productos, services, ordenes, loading } = useOrdenes();
 
     const [formData, setFormData] = useState({
         moneda: "GTQ",
         metodoPago: "dinero",
         items: [{ tipo: "producto", nombre: "", cantidad: 1 }]
-    })
+    });
 
     useEffect(() => {
         handleGetProductos();
+        handleGetServices();
         handleGetOrdenesProductos();
-    }, [])
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,7 +37,7 @@ const OrdenComponent = () => {
     }
 
     const handleRemoveItem = (index) => {
-        if(formData.items.length === 1) return;
+        if (formData.items.length === 1) return;
         const updatedItems = [...formData.items];
         updatedItems.splice(index, 1);
         setFormData(prev => ({ ...prev, items: updatedItems }));
@@ -51,19 +45,19 @@ const OrdenComponent = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await handlePostOrden(formData, formData.items[0]?.tipo);
+        const tipo = formData.items[0]?.tipo; // Se asume que todos los ítems son del mismo tipo
+        await handlePostOrden(formData, tipo);
         setFormData({
             moneda: "GTQ",
             metodoPago: "dinero",
             items: [{ tipo: "producto", nombre: "", cantidad: 1 }]
-        })
+        });
         handleGetOrdenesProductos();
     }
 
     return (
         <Layout>
             <div className="container py-5">
-
                 <div className="card shadow mb-5">
                     <div className="card-header bg-primary text-white d-flex align-items-center">
                         <PlusCircle className="me-2" size={20} />
@@ -123,16 +117,19 @@ const OrdenComponent = () => {
                                                 onChange={e => handleItemChange(index, "nombre", e.target.value)}
                                                 required
                                             >
-                                                <option value="">
-                                                    -- Selecciona {item.tipo} --
-                                                </option>
+                                                <option value="">-- Selecciona {item.tipo} --</option>
                                                 {item.tipo === "producto" &&
                                                     productos.map(prod => (
                                                         <option key={prod._id} value={prod.nombre}>
                                                             {prod.nombre}
                                                         </option>
-                                                    ))
-                                                }
+                                                    ))}
+                                                {item.tipo === "servicio" &&
+                                                    services.map(serv => (
+                                                        <option key={serv._id} value={serv.nombre}>
+                                                            {serv.nombre}
+                                                        </option>
+                                                    ))}
                                             </select>
                                         </div>
 
