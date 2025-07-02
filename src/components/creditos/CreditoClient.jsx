@@ -5,7 +5,6 @@ import Layout from '../layout/Layout'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import EuroIcon from '@mui/icons-material/Euro'
 import PersonIcon from '@mui/icons-material/Person'
-import ListAltIcon from '@mui/icons-material/ListAlt'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import ScheduleIcon from '@mui/icons-material/Schedule'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
@@ -23,6 +22,7 @@ const CreditoClient = () => {
         moneda: 'GTQ',
         numeroCuenta: ''
     })
+    const [filtro, setFiltro] = useState('pendientes');
 
     const user = JSON.parse(localStorage.getItem('user'))
 
@@ -101,6 +101,31 @@ const CreditoClient = () => {
         cuenta.estado?.toLowerCase() === 'activa' &&
         cuenta.entidadBancaria?.name?.toLowerCase() === 'banco innova'
     )
+
+    const creditosAprobados = creditosUsuario.filter(
+        (credito) => credito.status === true && credito.activo === true
+    )
+
+    const creditosPendientes = creditosUsuario.filter(
+        (credito) => credito.status === false && credito.activo === true
+    )
+
+    const creditosNoAprobados = creditosUsuario.filter(
+        (credito) => credito.status === false && credito.activo === false
+    )
+
+    const creditosFiltrados = () => {
+        switch (filtro) {
+            case 'aprobados':
+                return creditosAprobados
+            case 'pendientes':
+                return creditosPendientes
+            case 'no-aprobados':
+                return creditosNoAprobados
+            default:
+                return creditosPendientes
+        }
+    }
 
     return (
         <Layout>
@@ -194,7 +219,6 @@ const CreditoClient = () => {
                                     value={formData.moneda}
                                     onChange={handleInputChange}
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-                                    required
                                 >
                                     <option value="GTQ">GTQ</option>
                                     <option value="USD">USD</option>
@@ -204,89 +228,116 @@ const CreditoClient = () => {
 
                             <button
                                 type="submit"
-                                disabled={loading || isLoading || loadingCuentas}
-                                className="w-full py-3 text-white bg-blue-600 rounded-lg disabled:bg-blue-400"
+                                className="w-full bg-blue-600 text-white py-3 rounded-lg mt-4 hover:bg-blue-700 transition duration-300"
                             >
-                                {loading || isLoading || loadingCuentas ? 'Cargando...' : 'Solicitar Crédito'}
+                                Solicitar Crédito
                             </button>
                         </form>
                     </div>
 
-                    <div>
-                        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
-                            <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-white">
-                                <h2 className="text-2xl font-bold flex items-center gap-2">
-                                    <ListAltIcon />
-                                    Créditos Solicitados
-                                </h2>
-                                <p className="text-blue-100 mt-1 flex items-center gap-1">
-                                    <PersonIcon />
-                                    Lista de créditos que has solicitado
-                                </p>
-                            </div>
-
-                            <div className="p-6">
-                                {creditosUsuario.length === 0 ? (
-                                    <div className="text-center py-8">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <h3 className="mt-2 text-lg font-medium text-gray-900">No has solicitado créditos aún</h3>
-                                        <p className="mt-1 text-gray-500">Comienza agregando tu primer crédito</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        {creditosUsuario.map((credito) => (
-                                            <div
-                                                key={credito._id}
-                                                className="group border border-gray-200 rounded-lg p-5 hover:border-blue-500 transition duration-200 hover:shadow-md"
-                                            >
-                                                <div className="flex justify-between items-center">
-                                                    <div className="flex items-center gap-2 font-bold text-gray-800 text-lg">
-                                                        {getIconByMoneda(credito.moneda)}
-                                                        <span>{credito.montoSolicitado} {credito.moneda}</span>
-                                                    </div>
-
-                                                    <span className={`px-4 py-1 text-xs font-semibold rounded-full select-none ${credito.status === true ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' && credito.activo === false ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>
-                                                        {credito.status === true ? 'Aprobado' : 'Pendiente' && credito.activo === false ? 'No Aprobado' : 'Pendiente'}
-                                                    </span>
-                                                </div>
-
-                                                <div className="flex justify-between mt-4 pt-4 border-t border-gray-100">
-                                                    <div className="flex flex-col w-1/3">
-                                                        <span className="text-sm font-semibold text-gray-500 flex items-center gap-1">
-                                                            <ScheduleIcon className="h-4 w-4" />
-                                                            Plazo
-                                                        </span>
-                                                        <span className="text-gray-700">{credito.plazo} meses</span>
-                                                    </div>
-
-                                                    <div className="flex flex-col w-1/3">
-                                                        <span className="text-sm font-semibold text-gray-500 flex items-center gap-1">
-                                                            <PersonIcon className="h-4 w-4" />
-                                                            Usuario
-                                                        </span>
-                                                        <span className="text-gray-700 truncate max-w-xs">
-                                                            {credito.user?.username || 'Desconocido'}
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="flex flex-col w-1/3 items-end">
-                                                        <span className="text-sm font-semibold text-gray-500 flex items-center gap-1">
-                                                            <AccountBalanceIcon className="h-4 w-4" />
-                                                            Cuenta
-                                                        </span>
-                                                        <span className="text-gray-700 truncate max-w-xs text-right">
-                                                            {credito.cuenta?.numeroCuenta || 'No asignada'}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                        <div className="p-6">
+                            <h3 className="text-lg font-semibold">Filtrar Créditos</h3>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => setFiltro('pendientes')}
+                                    className={`px-6 py-2 text-xs font-semibold rounded-full select-none transition-colors duration-300 ${filtro === 'pendientes' ? 'bg-orange-200 text-orange-800' : 'bg-gray-200'}`}
+                                >
+                                    Pendientes
+                                </button>
+                                <button
+                                    onClick={() => setFiltro('aprobados')}
+                                    className={`px-6 py-2 text-xs font-semibold rounded-full select-none transition-colors duration-300 ${filtro === 'aprobados' ? 'bg-green-200 text-green-800' : 'bg-gray-200'}`}
+                                >
+                                    Aprobados
+                                </button>
+                                <button
+                                    onClick={() => setFiltro('no-aprobados')}
+                                    className={`px-6 py-2 text-xs font-semibold rounded-full select-none transition-colors duration-300 ${filtro === 'no-aprobados' ? 'bg-red-200 text-red-800' : 'bg-gray-200'}`}
+                                >
+                                    No Aprobados
+                                </button>
                             </div>
                         </div>
+
+                        {creditosFiltrados().length === 0 ? (
+                            <div className="text-center py-8">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <h3 className="mt-2 text-lg font-medium text-gray-900">No tienes créditos en esta categoría</h3>
+                            </div>
+                        ) : (
+                            <div className="max-h-150 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                                {creditosFiltrados().slice(0, 3).map((credito) => (
+                                    <div key={credito._id} className="group border border-gray-200 rounded-lg p-5 hover:border-blue-500 transition duration-200 hover:shadow-md">
+                                        <div className="flex justify-between items-center">
+                                            {credito.status === false && credito.activo === true && (
+                                                <div className="flex items-center gap-2 font-bold text-gray-800 text-lg">
+                                                    {getIconByMoneda(credito.moneda)}
+                                                    <span className="px-4 py-2 rounded-full">
+                                                        {credito.montoSolicitado} {credito.moneda}
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {credito.status === false && credito.activo === false && (
+                                                <div className="flex items-center gap-2 font-bold text-gray-800 text-lg">
+                                                    {getIconByMoneda(credito.moneda)}
+                                                    <span className="px-4 py-2 rounded-full">
+                                                        {credito.montoSolicitado} {credito.moneda}
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            {credito.status && (
+                                                <div>
+                                                    <div className="flex items-center gap-2 font-bold text-gray-800 text-base">
+                                                        {getIconByMoneda(credito.moneda)}
+                                                        <span className="bg-orange-200 text-orange-800 px-4 py-2 rounded-full mb-3 text-base">
+                                                            Solicitado: {credito.montoSolicitado} {credito.moneda}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 font-bold text-gray-800 text-base">
+                                                        {getIconByMoneda(credito.moneda)}
+                                                        <span className="bg-green-200 text-green-800 px-4 py-2 rounded-full text-base">
+                                                            Aprobado: {credito.montoAprobado} {credito.moneda}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            <span className={`px-4 py-1 text-xs font-semibold rounded-full select-none ${credito.status === true ? 'bg-green-100 text-green-800' : credito.activo === false ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'}`}>
+                                                {credito.status === true ? 'Aprobado' : credito.activo === false ? 'No Aprobado' : 'Pendiente'}
+                                            </span>
+                                        </div>
+
+                                        <div className="flex justify-between mt-4 pt-4 border-t border-gray-100">
+                                            <div className="flex flex-col w-1/3">
+                                                <span className="text-sm font-semibold text-gray-500 flex items-center gap-1">
+                                                    <ScheduleIcon className="h-4 w-4" />
+                                                    Plazo
+                                                </span>
+                                                <span className="text-gray-700">{credito.plazo} meses</span>
+                                            </div>
+                                            <div className="flex flex-col w-1/3">
+                                                <span className="text-sm font-semibold text-gray-500 flex items-center gap-1">
+                                                    <PersonIcon className="h-4 w-4" />
+                                                    Usuario
+                                                </span>
+                                                <span className="text-gray-700 truncate max-w-xs">{credito.user?.username || 'Desconocido'}</span>
+                                            </div>
+                                            <div className="flex flex-col w-1/3 items-end">
+                                                <span className="text-sm font-semibold text-gray-500 flex items-center gap-1">
+                                                    <AccountBalanceIcon className="h-4 w-4" />
+                                                    Cuenta
+                                                </span>
+                                                <span className="text-gray-700 truncate max-w-xs text-right">{credito.cuenta?.numeroCuenta || 'No asignada'}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

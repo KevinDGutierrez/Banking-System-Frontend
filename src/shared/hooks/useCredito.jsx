@@ -9,6 +9,7 @@ export const useCredito = () => {
 
     const handleGetCreditos = async () => {
         try {
+            setLoading(true);
             const response = await getCreditos();
             console.log("Créditos obtenidos:", response.data.creditos);
             setCreditos(response.data.creditos);
