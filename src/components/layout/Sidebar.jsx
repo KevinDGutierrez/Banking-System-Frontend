@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Wallet, User, Banknote,
-  Users, Shield, ChevronLeft, CreditCard, Package, Tags
+  Users, Shield, ChevronLeft, CreditCard, Package, Tags, Star
 } from 'lucide-react';
 import { useAccountBanking } from '../../shared/hooks/useDashboard';
 import { useBanking } from '../../shared/hooks/useDashboard';
@@ -27,6 +27,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     const { myAccount, handleMyAccount } = useMyAccount();
     const { adminProductos, handleAdminProductos } = useProductoAdmin();
     const { clienteOrdenes, handleClienteOrdenes } = useOrdenCliente();
+    const {favoritosClient, handleFavoritesClient} = userFavorites();
  
   const clientSections = [
     { text: 'Cuenta Bancaria', icon: <Wallet className="h-5 w-5"  />, action : handleAccountBanking },
@@ -34,6 +35,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     { text: 'Bancos', icon: <Banknote className="h-5 w-5"  />, action : handleBanking },
     { text: 'Mi Cuenta', icon: <Users className="h-5 w-5"/>, action : handleMyAccount },
     { text: 'Mis Ordenes', icon: <Tags className="h-5 w-5"/>, action : handleClienteOrdenes },
+    { text: 'Mis Favoritos', icon: <Star className="h-5 w-5"/>, action : handleFavoritesClient },
   ];
  
   const adminSections = [
