@@ -178,6 +178,39 @@ export const getServices = async () => {
     return await apiClient.get('services/list-services');
 }
 
+export const getTransfers = async () => {
+    console.log('[API Service] Obteniendo lista de todas las transferencias...');
+    return await apiClient.get('transfers/');
+};
+
+export const getTransferById = async (id) => {
+    console.log(`[API Service] Obteniendo transferencia por ID: ${id}...`);
+    return await apiClient.get(`transfers/${id}`);
+};
+
+export const realizarTransferencia = async (data, bancoReceptor) => {
+  if (!bancoReceptor) {
+    throw new Error('El nombre del banco receptor es obligatorio para la transferencia.');
+  }
+  console.log(`[API Service] Enviando POST a: /transferencias/${bancoReceptor} con datos:`, data);
+  return await apiClient.post(`transfers/transferencias/${bancoReceptor}`, data);
+};
+
+export const realizarTransferenciaInterbancaria = async (data) => {
+  console.log(`[API Service] Enviando POST a: /transferenciasInterbancaria con datos:`, data);
+  return await apiClient.post('interTransfers/transferenciasInterbancaria', data);
+};
+
+export const getInterbankTransfers = async () => {
+    console.log('[API Service] Obteniendo lista de transferencias interbancarias...');
+    return await apiClient.get('interTransfers/');
+};
+
+export const getInterbankTransferById = async (id) => {
+    console.log(`[API Service] Obteniendo transferencia interbancaria por ID: ${id}...`);
+    return await apiClient.get(`interTransfers/${id}`);
+};
+
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
 

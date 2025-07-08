@@ -152,4 +152,19 @@ export const useOrdenCliente = () => {
     }
 
     return { clienteOrdenes, handleClienteOrdenes };
-}
+};
+
+export const useTransferencias = () => {
+    const [transferencias, setTransferencias] = useState([]);
+    const navigate = useNavigate();
+
+    const handleTransferencias = async () => {
+       try {
+            navigate("/transfers", { state: { message: "Welcome to transfers" } });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    return { transferencias, handleTransferencias };
+};

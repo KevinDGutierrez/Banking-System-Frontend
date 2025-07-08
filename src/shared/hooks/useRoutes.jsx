@@ -17,6 +17,10 @@ import CreditoAdmin from "../../components/creditos/CreditoAdmin.jsx"
 import Favorites from "../../components/Favorites/Favorites.jsx"
 import MyAccount from "../../components/MyAccount/MyAccount.jsx"
 import OrdenComponent from "../../components/Ordenes/Orden.jsx"
+import ContentTransfer from "../../components/Transfers/ContentTransfer.jsx"
+import TransferenciaClient from "../../components/Transfers/TransferenciaClient.jsx"
+import TransferenciaInterbancariaClient from "../../components/Transfers/TransferenciaInterbancariaClient.jsx"
+import TransferHistorial from "../../components/Transfers/TransferHistorial.jsx"
 
 export const AppRoutes = () => {
     const routes = useRoutes([
@@ -111,6 +115,34 @@ export const AppRoutes = () => {
             path: "/clienteOrdenes", element: (
                 <PrivateRoute roles={["CLIENTE"]}>
                     <OrdenComponent />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/transfers", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <ContentTransfer />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/transfer", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <TransferenciaClient />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/interTransfer", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <TransferenciaInterbancariaClient />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/histTransfer", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <TransferHistorial />
                 </PrivateRoute>
             )
         }
