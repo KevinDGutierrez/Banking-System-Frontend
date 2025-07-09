@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTransfer } from '../../shared/hooks/useTransfer';
+import { useFavorites } from '../../shared/hooks/useFavorites';
 import Layout from '../layout/Layout';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PersonIcon from '@mui/icons-material/Person';
@@ -11,15 +12,19 @@ import SendIcon from '@mui/icons-material/Send';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import HomeIcon from '@mui/icons-material/Home';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import Swal from 'sweetalert2';
 import html2canvas from 'html2canvas';
 
-import { getAccountUserBanking } from '../../services/api';
+import { getAccountUserBanking, getBanking } from '../../services/api';
 
 const TransferenciaClient = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { handleRealizarTransferencia, loading: apiLoading } = useTransfer();
+  const { handleAddFavorite } = useFavorites();
   const [savingLoading, setSavingLoading] = useState(false);
+  const [addingFavorite, setAddingFavorite] = useState(false);
 
   const initialFormData = {
     cuentaEmisor: '',
@@ -34,7 +39,9 @@ const TransferenciaClient = () => {
 
   const [formData, setFormData] = useState(initialFormData);
   const [userAccounts, setUserAccounts] = useState([]);
+  const [bankingOptions, setBankingOptions] = useState([]);
   const [fetchingAccounts, setFetchingAccounts] = useState(true);
+  const [fetchingBanks, setFetchingBanks] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
 
   const [showTransferSummary, setShowTransferSummary] = useState(false);
@@ -76,19 +83,17 @@ const TransferenciaClient = () => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           user = JSON.parse(storedUser);
-
           if (user.token) {
             const decodedToken = decodeJwt(user.token);
             if (decodedToken && decodedToken.uid) {
-              user.id = decodedToken.uid;
+              user.id = decodedToken.uid; 
             } else {
               console.warn('Token JWT no contiene UID o no pudo ser decodificado.');
               user = null;
               localStorage.removeItem('user');
             }
           }
-
-          setCurrentUser(user);
+          setCurrentUser(user); 
         }
       } catch (e) {
         console.error("Error al parsear el usuario de localStorage o decodificar token:", e);
@@ -96,11 +101,10 @@ const TransferenciaClient = () => {
         user = null;
       }
 
-      if (user && user.id) {
+      if (user && user.id) { 
         try {
           const response = await getAccountUserBanking();
           const accounts = response.data.cuentas || response.data;
-
           setUserAccounts(accounts);
           if (accounts.length > 0) {
             setFormData((prev) => ({
@@ -117,8 +121,34 @@ const TransferenciaClient = () => {
       setFetchingAccounts(false);
     };
 
+    const loadBankingOptions = async () => {
+        setFetchingBanks(true);
+        try {
+            const response = await getBanking();
+            const banks = response.data.bancos || response.data;
+            setBankingOptions(banks);
+        } catch (error) {
+            console.error('Error al obtener opciones de bancos:', error);
+        } finally {
+            setFetchingBanks(false);
+        }
+    };
+
     loadUserDataAndAccounts();
-  }, []);
+    loadBankingOptions();
+
+    if (location.state) {
+      setFormData((prev) => ({
+        ...prev,
+        cuentaReceptor: location.state.cuentaReceptor || '',
+        aliasReceptor: location.state.aliasReceptor || '',
+        tipoCuentaReceptor: location.state.tipoCuentaReceptor || '',
+        bancoReceptor: location.state.bancoReceptor || 'Banco Innova',
+      }));
+      navigate(location.pathname, { replace: true });
+    }
+
+  }, [location.state]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -225,7 +255,7 @@ const TransferenciaClient = () => {
         const image = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.href = image;
-        link.download = `transferencia_${lastTransferDetails?.referencia || new Date().getTime()}.png`; // Usar referencia para el nombre del archivo
+        link.download = `transferencia_${lastTransferDetails?.referencia || new Date().getTime()}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -245,6 +275,33 @@ const TransferenciaClient = () => {
         });
     } finally {
         setSavingLoading(false);
+    }
+  };
+
+  const handleAddFavoriteClick = async () => {
+    setAddingFavorite(true);
+    try {
+        if (!currentUser || !currentUser.id) {
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo obtener el ID del usuario para agregar a favoritos. Por favor, intenta iniciar sesión de nuevo.',
+                icon: 'error',
+            });
+            setAddingFavorite(false);
+            return;
+        }
+
+        const favoriteData = {
+            usuario: currentUser.id, 
+            cuentaDestino: formData.cuentaReceptor, 
+            tipoCuenta: formData.tipoCuentaReceptor, 
+            alias: formData.aliasReceptor, 
+        };
+        await handleAddFavorite(favoriteData);
+    } catch (error) {
+        console.error("Error al agregar favorito:", error);
+    } finally {
+        setAddingFavorite(false);
     }
   };
 
@@ -420,8 +477,8 @@ const TransferenciaClient = () => {
                   <strong>Cuenta Receptora:</strong> {formData.cuentaReceptor}
                 </p>
                 <p><strong>Tipo Cuenta Receptora:</strong> {lastTransferDetails.tipoCuentaReceptor}</p>
-                <p><strong>Alias Receptor:</strong> {lastTransferDetails.aliasReceptor}</p>
-                <p><strong>Banco Receptor:</strong> {formData.bancoReceptor}</p> 
+                <p><strong>Alias Receptor:</strong> {formData.aliasReceptor}</p>
+                <p><strong>Banco Receptor:</strong> {formData.bancoReceptor}</p>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
@@ -444,6 +501,14 @@ const TransferenciaClient = () => {
                 >
                   {savingLoading ? 'Guardando...' : 'Guardar como Foto'}
                   <SaveAltIcon />
+                </button>
+                <button
+                  onClick={handleAddFavoriteClick}
+                  disabled={addingFavorite}
+                  className="flex items-center gap-2 px-6 py-3 bg-pink-600 text-white font-semibold rounded-lg hover:bg-pink-700 disabled:bg-pink-300 transition duration-300 w-full sm:w-auto justify-center"
+                >
+                  {addingFavorite ? 'Agregando...' : 'Agregar Favorito'}
+                  <FavoriteIcon />
                 </button>
               </div>
             </div>

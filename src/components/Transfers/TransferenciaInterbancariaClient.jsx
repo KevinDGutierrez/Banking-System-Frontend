@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Layout from '../layout/Layout';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import PersonIcon from '@mui/icons-material/Person';
@@ -10,16 +10,21 @@ import SendIcon from '@mui/icons-material/Send';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import HomeIcon from '@mui/icons-material/Home';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import Swal from 'sweetalert2';
 import html2canvas from 'html2canvas';
 
 import { useInterbankTransfer } from '../../shared/hooks/useInterbankTransfer';
+import { useFavorites } from '../../shared/hooks/useFavorites';
 import { getAccountUserBanking, getBanking } from '../../services/api'; 
 
 const TransferenciaInterbancariaClient = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { handleRealizarTransferenciaInterbancaria, loading: apiLoading } = useInterbankTransfer();
+  const { handleAddFavorite } = useFavorites();
   const [savingLoading, setSavingLoading] = useState(false);
+  const [addingFavorite, setAddingFavorite] = useState(false);
 
   const initialFormData = {
     cuentaEmisor: '',
@@ -146,7 +151,19 @@ const TransferenciaInterbancariaClient = () => {
 
     loadUserDataAndAccounts();
     loadBankingOptions();
-  }, []);
+
+    if (location.state) {
+      setFormData((prev) => ({
+        ...prev,
+        cuentaReceptorExterno: location.state.cuentaReceptorExterno || '',
+        aliasReceptor: location.state.aliasReceptor || '',
+        tipoCuentaReceptor: location.state.tipoCuentaReceptor || '',
+        bancoReceptor: location.state.bancoReceptor || '',
+      }));
+      navigate(location.pathname, { replace: true });
+    }
+
+  }, [location.state]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -243,7 +260,7 @@ const TransferenciaInterbancariaClient = () => {
                         el.style.accentColor = '#000000';
 
                         if (el.classList.contains('bg-gradient-to-r')) {
-                            el.style.backgroundImage = 'linear-gradient(to right, rgb(0, 128, 128), rgb(0, 139, 139))'; // Colores de teal-600 a cyan-600
+                            el.style.backgroundImage = 'linear-gradient(to right, rgb(0, 128, 128), rgb(0, 139, 139))';
                         }
                     }
                 });
@@ -253,7 +270,7 @@ const TransferenciaInterbancariaClient = () => {
         const image = canvas.toDataURL('image/png');
         const link = document.createElement('a');
         link.href = image;
-        link.download = `transferencia_interbancaria_${lastTransferDetails?.referencia || new Date().getTime()}.png`; // Usar referencia para el nombre del archivo
+        link.download = `transferencia_interbancaria_${lastTransferDetails?.referencia || new Date().getTime()}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -273,6 +290,33 @@ const TransferenciaInterbancariaClient = () => {
         });
     } finally {
         setSavingLoading(false);
+    }
+  };
+
+  const handleAddFavoriteClick = async () => {
+    setAddingFavorite(true);
+    try {
+        if (!currentUser || !currentUser.id) {
+            Swal.fire({
+                title: 'Error',
+                text: 'No se pudo obtener el ID del usuario para agregar a favoritos. Por favor, intenta iniciar sesión de nuevo.',
+                icon: 'error',
+            });
+            setAddingFavorite(false);
+            return;
+        }
+
+        const favoriteData = {
+            usuario: currentUser.id, 
+            cuentaDestino: formData.cuentaReceptorExterno,
+            tipoCuenta: formData.tipoCuentaReceptor,
+            alias: formData.aliasReceptor,
+        };
+        await handleAddFavorite(favoriteData);
+    } catch (error) {
+        console.error("Error al agregar favorito:", error);
+    } finally {
+        setAddingFavorite(false);
     }
   };
 
@@ -467,7 +511,7 @@ const TransferenciaInterbancariaClient = () => {
                   <strong>Cuenta Receptora Externa:</strong> {formData.cuentaReceptorExterno}
                 </p>
                 <p><strong>Tipo Cuenta Receptora:</strong> {lastTransferDetails.tipoCuentaReceptor}</p>
-                <p><strong>Alias Receptor:</strong> {lastTransferDetails.aliasReceptor}</p>
+                <p><strong>Alias Receptor:</strong> {formData.aliasReceptor}</p>
                 <p><strong>Banco Receptor:</strong> {formData.bancoReceptor}</p> 
               </div>
 
@@ -491,6 +535,14 @@ const TransferenciaInterbancariaClient = () => {
                 >
                   {savingLoading ? 'Guardando...' : 'Guardar como Foto'}
                   <SaveAltIcon />
+                </button>
+                <button
+                  onClick={handleAddFavoriteClick}
+                  disabled={addingFavorite}
+                  className="flex items-center gap-2 px-6 py-3 bg-pink-600 text-white font-semibold rounded-lg hover:bg-pink-700 disabled:bg-pink-300 transition duration-300 w-full sm:w-auto justify-center"
+                >
+                  {addingFavorite ? 'Agregando...' : 'Agregar Favorito'}
+                  <FavoriteIcon />
                 </button>
               </div>
             </div>
