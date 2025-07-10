@@ -15,8 +15,8 @@ export const useDeposit = () => {
         try {
             setLoading(true)
             const response = await getDeposits();
-            console.log(response.data, "datos");
-            setDeposits(response.data)
+            console.log(response.data.data, "Depositos");
+            setDeposits(response.data.data)
         } catch (error) {
             const backendError = error.response?.data;
             Swal.fire({
