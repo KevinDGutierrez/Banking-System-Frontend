@@ -15,6 +15,7 @@ import CreditoClient from "../../components/creditos/CreditoClient.jsx"
 import CreditoAdmin from "../../components/creditos/CreditoAdmin.jsx"
 import Favorites from "../../components/Favorites/Favorites.jsx"
 import DepositAdmin from "../../components/Deposits/Deposits.jsx"
+import DepositUser from "../../components/Deposits/DepositsUser.jsx"
 import MyAccount from "../../components/MyAccount/MyAccount.jsx"
 
 export const AppRoutes = () => {
@@ -96,6 +97,13 @@ export const AppRoutes = () => {
             path: "/depositos", element: (
                 <PrivateRoute>
                     <DepositAdmin />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/misDepositos", element: (
+                <PrivateRoute>
+                    <DepositUser />
                 </PrivateRoute>
             )
         },

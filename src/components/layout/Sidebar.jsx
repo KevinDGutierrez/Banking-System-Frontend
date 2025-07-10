@@ -12,6 +12,7 @@ import { useAccountBanking,
   useSolicitarCredito,
   useAprobarCredito,
   useAdminDeposits,
+  useUserDeposits,
   userFavorites} from '../../shared/hooks/useDashboard';
 
 
@@ -25,12 +26,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     const { solicitudCredito, handleSolicitarCredito } = useSolicitarCredito();
     const { aprobarCredito, handleAprobarCredito } = useAprobarCredito();
     const {adminDeposit, handleAdminDeposits} = useAdminDeposits()
+    const { userDeposits, handleUserDeposits } = useUserDeposits();
     const { myAccount, handleMyAccount } = useMyAccount();
 
   const clientSections = [
     { text: 'Cuenta Bancaria', icon: <Wallet className="h-5 w-5"  />, action : handleAccountBanking },
     { text: 'Creditos', icon: <CreditCard className="h-5 w-5"  />, action : handleSolicitarCredito },
     { text: 'Bancos', icon: <Banknote className="h-5 w-5"  />, action : handleBanking },
+    { text: 'Historia de Depositos', icon: <BanknoteArrowDown className = "h-5  w-5"/>, action : handleUserDeposits },
     { text: 'Mi Cuenta', icon: <Users className="h-5 w-5"/>, action : handleMyAccount },
   ];
   

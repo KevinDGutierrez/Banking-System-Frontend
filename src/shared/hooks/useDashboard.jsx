@@ -138,4 +138,16 @@ export const useAdminDeposits = () =>{
     return {adminDeposit, handleAdminDeposits};
 }
 
+export const useUserDeposits = () =>{
+    const [userDeposit, setUserDeposit]= useState([]);
+    const navigate = useNavigate();
 
+    const handleUserDeposits = async () => {
+        try {
+            navigate("/misDepositos", {state:{message: 'Welcome to deposits list'}})
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    return {userDeposit, handleUserDeposits};
+}
