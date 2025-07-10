@@ -186,5 +186,5 @@ export const useAccountBanking = () => {
 
 
 
-    return { accountBankingUser, accountBanking, handleGetAccountBanking, handleAprobarCuenta, handleDeleteCuenta, handleGetAccountBankingUser, handleAddAccountBanking, handleGetOpciones, tiposCuenta, monedas };
+    return { accountBankingUser, accountBanking, handleGetAccountBanking, handleAprobarCuenta, handleDeleteCuenta, handleGetAccountBankingUser, handleAddAccountBanking, handleGetOpciones, tiposCuenta, monedas, loading };
 }

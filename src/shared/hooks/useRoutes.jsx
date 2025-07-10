@@ -16,7 +16,6 @@ import CreditoClient from "../../components/creditos/CreditoClient.jsx"
 import CreditoAdmin from "../../components/creditos/CreditoAdmin.jsx"
 import Favorites from "../../components/Favorites/Favorites.jsx"
 import DepositAdmin from "../../components/Deposits/Deposits.jsx"
-import DepositUser from "../../components/Deposits/DepositsUser.jsx"
 import MyAccount from "../../components/MyAccount/MyAccount.jsx"
 import OrdenComponent from "../../components/Ordenes/Orden.jsx"
 import ContentTransfer from "../../components/Transfers/ContentTransfer.jsx"
@@ -108,15 +107,8 @@ export const AppRoutes = () => {
         },
         {
             path: "/depositos", element: (
-                <PrivateRoute>
+                <PrivateRoute roles={["ADMIN"]}>
                     <DepositAdmin />
-                </PrivateRoute>
-            )
-        },
-        {
-            path: "/misDepositos", element: (
-                <PrivateRoute>
-                    <DepositUser />
                 </PrivateRoute>
             )
         },

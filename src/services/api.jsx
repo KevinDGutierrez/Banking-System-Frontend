@@ -2,7 +2,8 @@ import axios from "axios"
 import { logout } from "../shared/hooks/useLogout"
 
 const apiClient = axios.create({
-    baseURL: 'https://banking-system-backend-production.up.railway.app/',
+    // baseURL: 'https://banking-system-backend-production.up.railway.app/',
+    baseURL: 'http://localhost:3000/',
     timeout: 5000
 })
 

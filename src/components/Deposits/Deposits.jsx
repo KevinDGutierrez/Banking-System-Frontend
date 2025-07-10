@@ -54,9 +54,6 @@ const DepositAdmin = () => {
                     deposits: results[1]
                 })
                 
-                console.log('📊 Estado actual de deposits:', deposits)
-                console.log('🏦 Estado actual de accountBanking:', accountBanking)
-                
             } catch (error) {
                 console.error('❌ Error al cargar datos:', error)
             } finally {
@@ -114,17 +111,13 @@ const DepositAdmin = () => {
             descripcion: descripcion.trim()
         }
 
-        console.log('💾 Enviando depósito:', depositData)
-
         try {
             let result
             if (editingDeposit) {
                 result = await handlePutDeposit(editingDeposit._id, depositData)
                 setEditingDeposit(null)
-                console.log('✏️ Depósito actualizado:', result)
             } else {
                 result = await handlePostDeposit(depositData)
-                console.log('➕ Depósito creado:', result)
             }
 
             // Limpiar formulario
@@ -145,10 +138,9 @@ const DepositAdmin = () => {
     }
 
     const handleEdit = (deposit) => {
-        console.log('✏️ Editando depósito:', deposit)
         setEditingDeposit(deposit)
         setFormData({
-            cuenta: deposit.cuenta?._id || '',
+            cuenta: deposit.cuenta?.numeroCuenta || '',
             monto: deposit.monto,
             moneda: deposit.moneda,
             descripcion: deposit.descripcion
@@ -214,7 +206,6 @@ const DepositAdmin = () => {
     const cuentasActivas = accountBanking?.filter(cuenta =>
         cuenta.estado?.toLowerCase() === 'activa'
     ) || []
-    console.log('🔍 Cuentas activas:', cuentasActivas)
 
     return (
         <Layout>
