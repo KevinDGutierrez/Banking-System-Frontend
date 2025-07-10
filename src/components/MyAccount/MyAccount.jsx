@@ -223,7 +223,7 @@ const MyAccount = () => {
                                         className="btn-primary w-full"
                                         onClick={() => setIsEditingPassword(true)}
                                     >
-                                        Cambiar contraseña
+                                        Guardar Cambios
                                     </button>
                                 )}
                             </form>

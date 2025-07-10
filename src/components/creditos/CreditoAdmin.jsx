@@ -144,7 +144,8 @@ const CreditoAdmin = () => {
                                     name="montoAprobado"
                                     value={formData.montoAprobado}
                                     onChange={handleInputChange}
-                                    min="1"
+                                    min="1000"
+                                    max="1000000"
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg"
                                     required
                                 />
@@ -223,7 +224,7 @@ const CreditoAdmin = () => {
                                                 className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition flex items-center gap-1"
                                             >
                                                 <DeleteForeverIcon className="h-5 w-5" />
-                                                Eliminar
+                                                No Aprobar
                                             </button>
                                         </div>
                                     </div>

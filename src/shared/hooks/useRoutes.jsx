@@ -10,6 +10,7 @@ import ClientDashboard from "../../components/Dashboard/ClientDashboard.jsx"
 import AdminDashboard from "../../components/Dashboard/AdminDashboard.jsx"
 import AccountBankingAdmin from "../../components/AccountBanking/AccoutAdmin.jsx"
 import ClienteAdmin from "../../components/Client/ClienteAdmin.jsx"
+import ProductosComponent from "../../components/Producto/Producto.jsx"
 import AccountClient from "../../components/AccountBanking/AccountClient.jsx"
 import CreditoClient from "../../components/creditos/CreditoClient.jsx"
 import CreditoAdmin from "../../components/creditos/CreditoAdmin.jsx"
@@ -17,6 +18,11 @@ import Favorites from "../../components/Favorites/Favorites.jsx"
 import DepositAdmin from "../../components/Deposits/Deposits.jsx"
 import DepositUser from "../../components/Deposits/DepositsUser.jsx"
 import MyAccount from "../../components/MyAccount/MyAccount.jsx"
+import OrdenComponent from "../../components/Ordenes/Orden.jsx"
+import ContentTransfer from "../../components/Transfers/ContentTransfer.jsx"
+import TransferenciaClient from "../../components/Transfers/TransferenciaClient.jsx"
+import TransferenciaInterbancariaClient from "../../components/Transfers/TransferenciaInterbancariaClient.jsx"
+import TransferHistorial from "../../components/Transfers/TransferHistorial.jsx"
 
 export const AppRoutes = () => {
     const routes = useRoutes([
@@ -66,6 +72,13 @@ export const AppRoutes = () => {
             )
         },
         {
+            path: "/adminProductos", element: (
+                <PrivateRoute roles={["ADMIN"]}>
+                    <ProductosComponent />
+                </PrivateRoute>
+            )
+        },
+        {
             path: "/accountBanking", element: (
                 <PrivateRoute roles={["CLIENTE"]}>
                     <AccountClient />
@@ -111,6 +124,41 @@ export const AppRoutes = () => {
             path: "/myAccount", element: (
                 <PrivateRoute roles={["CLIENTE"]}>
                     <MyAccount />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/clienteOrdenes", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <OrdenComponent />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/transfers", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <ContentTransfer />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/transfer", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <TransferenciaClient />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/interTransfer", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <TransferenciaInterbancariaClient />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/histTransfer", element: (
+                <PrivateRoute roles={["CLIENTE"]}>
+                    <TransferHistorial />
                 </PrivateRoute>
             )
         }

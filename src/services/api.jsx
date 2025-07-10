@@ -1,13 +1,10 @@
 import axios from "axios"
 import { logout } from "../shared/hooks/useLogout"
 
-
 const apiClient = axios.create({
-    baseURL : 'https://banking-system-backend-production.up.railway.app/',
-    // baseURL: 'http://localhost:3000/',
+    baseURL: 'https://banking-system-backend-production.up.railway.app/',
     timeout: 5000
 })
-
 
 apiClient.interceptors.request.use(
     (config) => {
@@ -30,7 +27,6 @@ apiClient.interceptors.request.use(
     }
 )
 
-
 export const login = async (data) => {
     return await apiClient.post('users/login', data);
 }
@@ -38,62 +34,105 @@ export const login = async (data) => {
 export const register = async (data) => {
     return await apiClient.post('users/register', data);
 }
+
+export const updateCliente = async (data) => {
+    return await apiClient.put(`users/${data}`);
+}
+
+export const tipoCuenta = async (numeroCuenta) => {
+    return await apiClient.put(`users/cuentas/${numeroCuenta}/tipo`);
+}
+
 export const resetPassword = async (data) => {
     return await apiClient.post('users/reset', data);
 }
+
 export const solicitarRecuperacion = async (data) => {
     return await apiClient.post('users/recuperacion', data);
 }
+
 export const getBanking = async () => {
     return await apiClient.get('/bancos/');
 }
+
 export const AprobarCuentaBancaria = async (numeroCuenta) => {
     return await apiClient.put(`cuentas/${numeroCuenta}/aprobar`);
 }
+
 export const getClientesByAdmin = async () => {
     return await apiClient.get('users/clientes');
 }
+
 export const AprobarCliente = async (id) => {
     return await apiClient.put(`users/${id}/aprobar`);
 }
+
 export const deleteCliente = async (id) => {
     return await apiClient.delete(`users/${id}`);
 }
+
+export const postProducto = async (data) => {
+    return await apiClient.post('productos/postProducto', data);
+}
+
+export const getProductos = async () => {
+    return await apiClient.get('productos/getProductos');
+}
+
+export const getProductoPorNombre = async (nombre) => {
+    return await apiClient.get(`productos/getProductoPorNombre/${nombre}`);
+}
+
+export const putProducto = async (id) => {
+    return await apiClient.put(`productos/putProducto/${id}`);
+}
+
+export const deleteProducto = async (id) => {
+    return await apiClient.delete(`productos/deleteProducto/${id}`);
+}
+
 export const deleteAccounts = async (id) => {
     return await apiClient.delete(`cuentas/${id}`);
 }
+
 export const addAccountBanking = async (data) => {
     return await apiClient.post('cuentas/', data);
 }
+
 export const getAccountUserBanking = async () => {
     return await apiClient.get('cuentas/usuario');
 }
+
 export const getOpciones = async () => {
     return await apiClient.get('cuentas/opciones');
 }
+
 export const getAccountsBanking = async () => {
     return await apiClient.get('/cuentas/todas');
 }
+
 export const getFavorites = async () => {
     return await apiClient.get('/favoritos/');
 }
+
 export const addFavorite = async (data) => {
     return await apiClient.post('favoritos/', data);
 }
+
 export const myAccount = async (data) => {
     console.log(data)
     return await apiClient.put('users/clientes', data)
-};
+}
 
 export const myAccountApplication = async (data) => {
     console.log(data)
     return await apiClient.put('users/clientes/solicitud', data)
-};
+}
 
 export const myAccountList = async (data) => {
     console.log(data)
     return await apiClient.get('users/myAccount', data)
-};
+}
 
 export const updateClienteAdmin = async (id, data) => {
     return await apiClient.put(`users/admin/${id}`, data);
@@ -150,6 +189,54 @@ export const deleteDeposits = async (id) => {
 export const getStatsDeposits = async (id) => {
     return await apiClient.get(`depositos/stats/${id}`)
 }
+export const postOrden = async (data) => {
+    return await apiClient.post('ordenes/postOrden', data);
+}
+
+export const getOrdenesProductos = async () => {
+    return await apiClient.get('ordenes/getOrdenesProductos');
+}
+
+export const getOrdenesServicios = async () => {
+    return await apiClient.get('ordenes/getOrdenesServicios');
+}
+
+export const getServices = async () => {
+    return await apiClient.get('services/list-services');
+}
+
+export const getTransfers = async () => {
+    console.log('[API Service] Obteniendo lista de todas las transferencias...');
+    return await apiClient.get('transfers/');
+};
+
+export const getTransferById = async (id) => {
+    console.log(`[API Service] Obteniendo transferencia por ID: ${id}...`);
+    return await apiClient.get(`transfers/${id}`);
+};
+
+export const realizarTransferencia = async (data, bancoReceptor) => {
+  if (!bancoReceptor) {
+    throw new Error('El nombre del banco receptor es obligatorio para la transferencia.');
+  }
+  console.log(`[API Service] Enviando POST a: /transferencias/${bancoReceptor} con datos:`, data);
+  return await apiClient.post(`transfers/transferencias/${bancoReceptor}`, data);
+};
+
+export const realizarTransferenciaInterbancaria = async (data) => {
+  console.log(`[API Service] Enviando POST a: /transferenciasInterbancaria con datos:`, data);
+  return await apiClient.post('interTransfers/transferenciasInterbancaria', data);
+};
+
+export const getInterbankTransfers = async () => {
+    console.log('[API Service] Obteniendo lista de transferencias interbancarias...');
+    return await apiClient.get('interTransfers/');
+};
+
+export const getInterbankTransferById = async (id) => {
+    console.log(`[API Service] Obteniendo transferencia interbancaria por ID: ${id}...`);
+    return await apiClient.get(`interTransfers/${id}`);
+};
 
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;

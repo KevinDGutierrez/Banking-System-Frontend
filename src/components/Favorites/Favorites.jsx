@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFavorites } from '../../shared/hooks/useFavorites';
 import Layout from '../layout/Layout';
 import {
@@ -11,20 +12,59 @@ import {
     Favorite as FavoriteIcon,
     Star as StarIcon,
     StarBorder as StarBorderIcon,
+    Send as SendIcon
 } from '@mui/icons-material';
 import './Favorites.css';
+import { getBanking } from '../../services/api';
 
 const Favorites = () => {
+    const navigate = useNavigate();
     const { favoritos, handleGetFavorites } = useFavorites();
     const [isLoading, setIsLoading] = useState(true);
+    const [bankingOptions, setBankingOptions] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            await handleGetFavorites();
-            setIsLoading(false);
+            setIsLoading(true);
+            try {
+                await handleGetFavorites();
+                const response = await getBanking();
+                setBankingOptions(response.data.bancos || response.data);
+            } catch (error) {
+                console.error("Error al cargar favoritos o bancos:", error);
+            } finally {
+                setIsLoading(false);
+            }
         }
         fetchData();
     }, []);
+
+    const handleTransferClick = (favorito) => {
+        const bankNameFromFavorite = favorito.cuentaDestino.entidadBancaria?.name?.trim().toLowerCase();
+        const innovaBankName = 'banco innova';
+
+        console.log("DEBUG: Nombre de banco del favorito:", bankNameFromFavorite);
+        console.log("DEBUG: Nombre de Banco Innova para comparación:", innovaBankName);
+
+        const isInternalBank = bankNameFromFavorite === innovaBankName;
+
+        console.log("DEBUG: Es banco interno?", isInternalBank);
+
+        let prefillData = {
+            aliasReceptor: favorito.alias,
+            tipoCuentaReceptor: favorito.tipoCuenta,
+        };
+
+        if (isInternalBank) {
+            prefillData.cuentaReceptor = favorito.cuentaDestino.numeroCuenta;
+            prefillData.bancoReceptor = 'Banco Innova';
+            navigate('/transfer', { state: prefillData });
+        } else {
+            prefillData.cuentaReceptorExterno = favorito.cuentaDestino.numeroCuenta;
+            prefillData.bancoReceptor = favorito.cuentaDestino.entidadBancaria?.name || ''; 
+            navigate('/interTransfer', { state: prefillData });
+        }
+    };
 
     if (isLoading) {
         return (
@@ -72,7 +112,6 @@ const Favorites = () => {
                                 <p className="text-gray-500 max-w-md mx-auto">
                                     Agrega cuentas a tus favoritos para verlas aquí y acceder rápidamente
                                 </p>
-
                             </div>
                         ) : (
                             <>
@@ -108,7 +147,7 @@ const Favorites = () => {
                                                             {favorito.cuentaDestino.numeroCuenta}
                                                         </h3>
                                                         <p className="text-blue-600 text-sm font-medium">
-                                                            {favorito.cuentaDestino.tipo}
+                                                            {favorito.tipoCuenta} {/* Usar favorito.tipoCuenta directamente */}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -122,7 +161,7 @@ const Favorites = () => {
                                                         <div>
                                                             <p className="text-xs text-gray-500 uppercase tracking-wider">Propietario</p>
                                                             <p className="font-semibold text-gray-800">
-                                                                {favorito.cuentaDestino.propietario.name}
+                                                                {favorito.cuentaDestino.propietario?.name || 'Desconocido'}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -133,7 +172,7 @@ const Favorites = () => {
                                                         <div>
                                                             <p className="text-xs text-gray-500 uppercase tracking-wider">Moneda</p>
                                                             <p className="font-semibold text-gray-800">
-                                                                {favorito.cuentaDestino.moneda}
+                                                                {favorito.cuentaDestino.moneda || 'N/A'}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -144,7 +183,7 @@ const Favorites = () => {
                                                         <div>
                                                             <p className="text-xs text-gray-500 uppercase tracking-wider">Banco</p>
                                                             <p className="font-semibold text-gray-800">
-                                                                {favorito.cuentaDestino.entidadBancaria.name}
+                                                                {favorito.cuentaDestino.entidadBancaria?.name || 'Desconocido'}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -160,6 +199,13 @@ const Favorites = () => {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {/* Botón de Transferir */}
+                                                <button
+                                                    onClick={() => handleTransferClick(favorito)}
+                                                    className="w-full mt-4 flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md transform hover:scale-105"
+                                                >
+                                                    Transferir <SendIcon />
+                                                </button>
                                             </div>
                                             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                                         </div>
