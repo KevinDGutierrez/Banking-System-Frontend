@@ -49,11 +49,6 @@ const DepositAdmin = () => {
                     handleGetDeposits()
                 ])
                 
-                console.log('✅ Datos cargados:', {
-                    accountBanking: results[0],
-                    deposits: results[1]
-                })
-                
             } catch (error) {
                 console.error('❌ Error al cargar datos:', error)
             } finally {
@@ -63,24 +58,6 @@ const DepositAdmin = () => {
         
         fetchData()
     }, [])
-
-    // Debug: Monitorear cambios en deposits
-    useEffect(() => {
-        console.log('📈 Deposits actualizado:', {
-            length: deposits?.length || 0,
-            data: deposits,
-            isArray: Array.isArray(deposits)
-        })
-    }, [deposits])
-
-    // Debug: Monitorear cambios en accountBanking
-    useEffect(() => {
-        console.log('🏦 AccountBanking actualizado:', {
-            length: accountBanking?.length || 0,
-            data: accountBanking,
-            isArray: Array.isArray(accountBanking)
-        })
-    }, [accountBanking])
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -189,7 +166,7 @@ const DepositAdmin = () => {
                 return <EuroIcon className="text-blue-600" />
             case 'GTQ':
             default:
-                return <CurrencyExchangeIcon className="text-yellow-600" />
+                return <p className="text-yellow-600" >Q</p>
         }
     }
 
