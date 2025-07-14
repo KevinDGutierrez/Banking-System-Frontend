@@ -12,7 +12,9 @@ const MyAccount = () => {
 
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordActual, setShowPasswordActual] = useState(false);
+    const [showPasswordNueva, setShowPasswordNueva] = useState(false);
+
 
     const [formData, setFormData] = useState({
         username: myData?.username || "",
@@ -60,11 +62,21 @@ const MyAccount = () => {
         setIsDetailsOpen(false);
     };
 
-    const handleSubmit = async (e) => {
+    const handleUsernameSubmit = async (e) => {
         e.preventDefault();
-        await handleMyAccountEdit(formData);
+        await handleMyAccountEdit({ username: formData.username });
+        await handleMyAccountList();
+    };
+
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
+        await handleMyAccountEdit({
+            passwordActual: formData.passwordActual,
+            nuevaPassword: formData.nuevaPassword,
+        });
         await handleMyAccountList();
         setIsEditingPassword(false);
+ 
     };
 
     useEffect(() => {
@@ -146,7 +158,7 @@ const MyAccount = () => {
                             <h2 className="card-title">
                                 <FiEdit className="icon" /> Actualizar cuenta
                             </h2>
-                            <form onSubmit={handleSubmit} className="account-form">
+                            <form onSubmit={handleUsernameSubmit} className="account-form">
                                 <div className="form-group">
                                     <label htmlFor="username">Nombre de usuario</label>
                                     <input
@@ -159,74 +171,77 @@ const MyAccount = () => {
                                         className="form-input"
                                     />
                                 </div>
-
-                                {isEditingPassword ? (
-                                    <>
-                                        <div className="form-group">
-                                            <label htmlFor="passwordActual">Contraseña actual</label>
-                                            <div className="password-input">
-                                                <input
-                                                    type={showPassword ? "text" : "password"}
-                                                    id="passwordActual"
-                                                    name="passwordActual"
-                                                    value={formData.passwordActual}
-                                                    onChange={handleChange}
-                                                    className="form-input"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    className="password-toggle"
-                                                    onClick={() => setShowPassword(!showPassword)}
-                                                >
-                                                    {showPassword ? <FiEyeOff /> : <FiEye />}
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div className="form-group">
-                                            <label htmlFor="nuevaPassword">Nueva contraseña</label>
-                                            <div className="password-input">
-                                                <input
-                                                    type={showPassword ? "text" : "password"}
-                                                    id="nuevaPassword"
-                                                    name="nuevaPassword"
-                                                    value={formData.nuevaPassword}
-                                                    onChange={handleChange}
-                                                    className="form-input"
-                                                />
-                                                <button
-                                                    type="button"
-                                                    className="password-toggle"
-                                                    onClick={() => setShowPassword(!showPassword)}
-                                                >
-                                                    {showPassword ? <FiEyeOff /> : <FiEye />}
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        <div className="form-actions">
-                                            <button
-                                                type="button"
-                                                className="btn-secondary"
-                                                onClick={() => setIsEditingPassword(false)}
-                                            >
-                                                Cancelar
-                                            </button>
-                                            <button type="submit" className="btn-primary">
-                                                <FiCheck className="mr-2" /> Guardar cambios
-                                            </button>
-                                        </div>
-                                    </>
-                                ) : (
+                                <div className="form-actions">
+                                    <button type="submit" className="btn-primary">
+                                        Actualizar usuario
+                                    </button>
+                                </div>
+                                <div className="form-actions">
                                     <button
                                         type="button"
-                                        className="btn-primary w-full"
+                                        className="btn-secondary"
                                         onClick={() => setIsEditingPassword(true)}
                                     >
-                                        Guardar Cambios
+                                        Actualizar contraseña
                                     </button>
-                                )}
+                                </div>
                             </form>
+                            {isEditingPassword && (
+                                <form onSubmit={handlePasswordSubmit} className="account-form">
+                                    <div className="form-group">
+                                        <label htmlFor="passwordActual">Contraseña actual</label>
+                                        <div className="password-input">
+                                            <input
+                                                type={showPasswordActual ? "text" : "password"}
+                                                id="passwordActual"
+                                                name="passwordActual"
+                                                value={formData.passwordActual}
+                                                onChange={handleChange}
+                                                className="form-input"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="password-toggle"
+                                                onClick={() => setShowPasswordActual(!showPasswordActual)}
+                                            >
+                                                {showPasswordActual ? <FiEyeOff /> : <FiEye />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="nuevaPassword">Nueva contraseña</label>
+                                        <div className="password-input">
+                                            <input
+                                                type={showPasswordNueva ? "text" : "password"}
+                                                id="nuevaPassword"
+                                                name="nuevaPassword"
+                                                value={formData.nuevaPassword}
+                                                onChange={handleChange}
+                                                className="form-input"
+                                            />
+                                            <button
+                                                type="button"
+                                                className="password-toggle"
+                                                onClick={() => setShowPasswordNueva(!showPasswordNueva)}
+                                            >
+                                                {showPasswordNueva ? <FiEyeOff /> : <FiEye />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="form-actions">
+                                        <button
+                                            type="button"
+                                            className="btn-secondary"
+                                            onClick={() => setIsEditingPassword(false)}
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" className="btn-primary">
+                                            Guardar nueva contraseña
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
                         </div>
 
                         <div className="form-section">
