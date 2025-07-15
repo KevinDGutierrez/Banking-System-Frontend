@@ -28,7 +28,7 @@ export const useInterbankTransfer = () => {
             console.error("Error en la transferencia interbancaria (frontend):", backendError || error.message || error);
             Swal.fire({
                 title: 'Error',
-                text: backendError?.msg || backendError?.error || 'Error al realizar la transferencia interbancaria',
+                text: backendError?.error || backendError?.msg || 'Error al obtener las transferencia interbancaria',
                 icon: 'error'
             });
             throw error;
@@ -43,7 +43,14 @@ export const useInterbankTransfer = () => {
             const response = await getInterbankTransfers();
             setInterbankTransfers(response.data.transferencias);
         } catch (error) {
-            console.error("Error al obtener transferencias interbancarias:", error.response?.data || error.message);
+            const backendError = error.response?.data;
+            console.error("Error en la transferencia interbancaria (frontend):", backendError || error.message || error);
+            Swal.fire({
+                title: 'Error',
+                text: backendError?.error || backendError?.msg || 'Error al realizar la transferencia interbancaria',
+                icon: 'error'
+            });
+            throw error;
         } finally {
             setLoading(false);
         }
@@ -55,7 +62,14 @@ export const useInterbankTransfer = () => {
             const response = await getInterbankTransferById(id);
             setInterbankTransfer(response.data.transferencia);
         } catch (error) {
-            console.error("Error al obtener transferencia interbancaria por ID:", error.response?.data || error.message);
+            const backendError = error.response?.data;
+            console.error("Error en la transferencia interbancaria (frontend):", backendError || error.message || error);
+            Swal.fire({
+                title: 'Error',
+                text: backendError?.error || backendError?.msg || 'Error al obtener la transferencia por id',
+                icon: 'error'
+            });
+            throw error;
         } finally {
             setLoading(false);
         }

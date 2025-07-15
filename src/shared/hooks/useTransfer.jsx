@@ -52,7 +52,7 @@ export const useTransfer = () => {
             console.error("Error en la transferencia:", backendError); 
             Swal.fire({
                 title: 'Error',
-                text: backendError?.msg || backendError?.error || 'Error al realizar la transferencia',
+                text: backendError?.error || backendError?.msg ||'Error al realizar la transferencia',
                 icon: 'error'
             });
             throw error;
@@ -69,7 +69,7 @@ export const useTransfer = () => {
             const backendError = error.response?.data;
             Swal.fire({
                 title: 'Error',
-                text: backendError?.msg || backendError?.error || 'Error al obtener los detalles de la transferencia',
+                text: backendError?.error || backendError?.msg || 'Error al obtener los detalles de la transferencia',
                 icon: 'error'
             });
         }

@@ -504,7 +504,7 @@ const TransferenciaInterbancariaClient = () => {
                 <p>
                   <strong>Referencia:</strong> {lastTransferDetails.referencia}
                 </p>
-                <p><strong>Fecha:</strong> {new Date(lastTransferDetails.fecha).toLocaleDateString()} {new Date(lastTransferDetails.fecha).toLocaleTimeString()}</p>
+                <p><strong>Fecha:</strong> {new Date(lastTransferDetails.createdAt).toLocaleDateString()} {new Date(lastTransferDetails.createdAt).toLocaleTimeString()}</p>
                 <p><strong>Monto:</strong> {lastTransferDetails.moneda} {lastTransferDetails.monto?.toFixed(2)}</p>
                 <p><strong>Cuenta Emisora:</strong> {formData.cuentaEmisor}</p>
                 <p>

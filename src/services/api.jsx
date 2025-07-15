@@ -216,16 +216,13 @@ export const getTransferById = async (id) => {
 };
 
 export const realizarTransferencia = async (data, bancoReceptor) => {
-  if (!bancoReceptor) {
-    throw new Error('El nombre del banco receptor es obligatorio para la transferencia.');
-  }
-  console.log(`[API Service] Enviando POST a: /transferencias/${bancoReceptor} con datos:`, data);
-  return await apiClient.post(`transfers/transferencias/${bancoReceptor}`, data);
+    console.log(`[API Service] Enviando POST a: /transferencias/${bancoReceptor} con datos:`, data);
+    return await apiClient.post(`transfers/transferencias/${bancoReceptor}`, data);
 };
 
 export const realizarTransferenciaInterbancaria = async (data) => {
-  console.log(`[API Service] Enviando POST a: /transferenciasInterbancaria con datos:`, data);
-  return await apiClient.post('interTransfers/transferenciasInterbancaria', data);
+    console.log(`[API Service] Enviando POST a: /transferenciasInterbancaria con datos:`, data);
+    return await apiClient.post('interTransfers/transferenciasInterbancaria', data);
 };
 
 export const getInterbankTransfers = async () => {
