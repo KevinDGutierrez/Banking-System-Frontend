@@ -235,6 +235,46 @@ export const getInterbankTransferById = async (id) => {
     return await apiClient.get(`interTransfers/${id}`);
 };
 
+export const getByClienteNumber = async () => {
+    return await apiClient.get('users/clientes/numero')
+}
+
+export const getByNumeroCuentasActivas = async () => {
+    return await apiClient.get('cuentas/numero')
+}
+
+export const getSaldoTotal = async () => {
+    return await apiClient.get('cuentas/saldo')
+}
+
+export const getByNumeroTransaccionesHoy = async () => {
+    return await apiClient.get('transfers/numero')
+}
+
+export const getUltimaTransaccion = async () => {
+    return await apiClient.get('transfers/ultima')
+}
+
+export const getIngresos = async () => {
+    return await apiClient.get('users/ingresos')
+}
+
+export const getIngresosByPromedio = async () => {
+    return await apiClient.get('users/ingresos/promedio')
+}
+
+export const getTransfersByMoneda = async () => {
+    return await apiClient.get('transfers/por-moneda')
+}
+
+export const getVerMisPuntos = async () => {
+    return await apiClient.get('users/puntos')
+}
+
+export const getVerMisOrdenes = async () => {
+    return await apiClient.get('ordenes/getMisOrdenes')
+}
+
 const checkResponseStatus = (e) => {
     const responseStatus = e?.response?.status;
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, LogOut, House } from 'lucide-react';
 import Swal from 'sweetalert2';
+import { Link } from 'react-router-dom';
 import { logout as logoutHandler } from '../../shared/hooks/useLogout';
 
 const Navbar = ({ toggleSidebar }) => {
@@ -31,17 +32,17 @@ const Navbar = ({ toggleSidebar }) => {
         <div className="flex items-center space-x-4">
           <button
             onClick={toggleSidebar}
-            className="p-2 rounded-md hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-2 rounded-md hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 "
           >
             <Menu className="h-10 w-8" />
           </button>
-          <a
-            href="/dashboard"
-            className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent no-underline hover:no-underline"
           >
             <House className="h-6 w-6" />
             {user?.role === 'ADMIN' ? 'Panel de Administración' : 'Mi Banco Digital'}
-          </a>
+          </Link>
         </div>
 
         <div className="flex items-center space-x-4">
