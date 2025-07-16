@@ -11,11 +11,11 @@ export const useTransfer = () => {
         try {
             setLoading(true);
             const response = await getTransfers();
-            console.log("Transferencias obtenidas:", response.data.transfers);
-            setTransfers(response.data.transfers);
+            console.log("Transferencias obtenidas:", response.data.transferencias);
+            setTransfers(response.data.transferencias);
         } catch (error) {
             const backendError = error.response?.data;
-            console.error("Error al obtener las transferencias:", backendError?.msg || backendError?.error || error.message);
+            console.error("Error al obtener las transferencias:", backendError?.error || backendError?.msg || error.message);
         } finally {
             setLoading(false);
         }
@@ -45,7 +45,7 @@ export const useTransfer = () => {
                 timer: 1500
             });
 
-            return response.data.transferencia; 
+            return response.data.transferencias;
 
         } catch (error) {
             const backendError = error.response?.data;
@@ -64,7 +64,7 @@ export const useTransfer = () => {
     const handleGetTransferById = async (id) => {
         try {
             const response = await getTransferById(id);
-            setTransfer(response.data.transferencia);
+            setTransfer(response.data.transferencias);
         } catch (error) {
             const backendError = error.response?.data;
             Swal.fire({

@@ -22,6 +22,7 @@ import ContentTransfer from "../../components/Transfers/ContentTransfer.jsx"
 import TransferenciaClient from "../../components/Transfers/TransferenciaClient.jsx"
 import TransferenciaInterbancariaClient from "../../components/Transfers/TransferenciaInterbancariaClient.jsx"
 import TransferHistorial from "../../components/Transfers/TransferHistorial.jsx"
+import AdminViewTransfers from "../../components/Transfers/AdminViewTransfers.jsx"
 
 export const AppRoutes = () => {
     const routes = useRoutes([
@@ -151,6 +152,13 @@ export const AppRoutes = () => {
             path: "/histTransfer", element: (
                 <PrivateRoute roles={["CLIENTE"]}>
                     <TransferHistorial />
+                </PrivateRoute>
+            )
+        },
+        {
+            path: "/adminTransfers", element: (
+                <PrivateRoute roles={["ADMIN"]}>
+                    <AdminViewTransfers />
                 </PrivateRoute>
             )
         }
