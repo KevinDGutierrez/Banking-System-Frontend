@@ -37,9 +37,9 @@ const AdminDashboard = () => {
         <div className="container mx-auto py-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { title: 'Total Clientes', value: `${clienteNumber}`, change: '+12%', icon: '👥', color: 'bg-blue-500' },
-              { title: 'Cuentas Activas', value: `${cuentasActivas}`, change: '+5%', icon: '💳', color: 'bg-green-500' },
-              { title: 'Transferencias', value: `${transaccionesHoy}`, change: '+3%', icon: '🔄', color: 'bg-purple-500' },
+              { title: 'Total Clientes', value: `${clienteNumber}`, change: '', icon: '👥', color: 'bg-blue-500' },
+              { title: 'Cuentas Activas', value: `${cuentasActivas}`, change: '', icon: '💳', color: 'bg-green-500' },
+              { title: 'Transferencias', value: `${transaccionesHoy}`, change: '', icon: '🔄', color: 'bg-purple-500' },
             ].map((stat, index) => (
               <div
                 key={index}

@@ -34,8 +34,18 @@ const ClientDashboard = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { title: 'Saldo Actual', value: `${saldoTotal}`, icon: '💰', color: 'bg-indigo-600' },
-              { title: 'Última Transacción', value: `${ultimaTransaccion}`, icon: '🛒', color: 'bg-teal-600' },
+              {
+                title: 'Saldo Actual',
+                value: `Q ${saldoTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                icon: '💰',
+                color: 'bg-indigo-600'
+              },
+              {
+                title: 'Última Transacción',
+                value: `${ultimaTransaccion.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                icon: '🛒',
+                color: 'bg-teal-600'
+              }
             ].map((card, index) => (
               <div
                 key={index}
@@ -136,7 +146,7 @@ const ClientDashboard = () => {
                       <div className="text-right">
                         <p className="text-xs font-medium text-gray-500">Total</p>
                         <p className="text-xl font-bold text-indigo-600">
-                          {orden.moneda} {orden.total}
+                          {orden.moneda} {orden.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                       </div>
                     </div>
@@ -172,11 +182,11 @@ const ClientDashboard = () => {
                               </div>
                               <div>
                                 <p className="text-xs text-gray-500">P. Unitario</p>
-                                <p>{orden.moneda} {item.precioUnitario}</p>
+                                <p>{orden.moneda} {item.precioUnitario.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                               </div>
                               <div>
                                 <p className="text-xs text-gray-500">Subtotal</p>
-                                <p className="font-medium">{orden.moneda} {item.subtotal}</p>
+                                <p className="font-medium">{orden.moneda} {item.subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
                               </div>
                             </div>
                           </div>
