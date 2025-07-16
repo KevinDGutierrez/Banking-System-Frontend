@@ -182,3 +182,18 @@ export const useTransferencias = () => {
 
     return { transferencias, handleTransferencias };
 };
+
+export const useAdminTransferencias = () => {
+    const [adminTransferencias, setAdminTransferencias] = useState([]);
+    const navigate = useNavigate();
+
+    const handleAdminTransferencias = async () => {
+       try {
+            navigate("/adminTransfers", { state: { message: "Welcome to transfers" } });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    return { adminTransferencias, handleAdminTransferencias };
+};
