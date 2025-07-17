@@ -324,7 +324,7 @@ export const Register = ({ switchAuthHandler }) => {
               <div className="bg-blue-600 py-6 px-8 text-center">
                 <div className="flex justify-center mb-4">
                   <img
-                    src="./src/assets/Banking1.png"
+                    src="../assets/Banking1.png"
                     alt="Bank Logo"
                     className="w-24 h-24 object-contain"
                   />
