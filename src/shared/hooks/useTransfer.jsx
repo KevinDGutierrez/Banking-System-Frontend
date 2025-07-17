@@ -37,6 +37,7 @@ export const useTransfer = () => {
             console.log("Realizando transferencia con datos:", data);
 
             const response = await realizarTransferencia(data, bancoReceptor);
+            console.log("DEBUG useTransfer: Valor de response.data.transferencia ANTES de retornar:", response.data.transferencia);
 
             await Swal.fire({
                 title: 'Transferencia Exitosa',
@@ -45,14 +46,14 @@ export const useTransfer = () => {
                 timer: 1500
             });
 
-            return response.data.transferencias;
+            return response.data.transferencia;
 
         } catch (error) {
             const backendError = error.response?.data;
-            console.error("Error en la transferencia:", backendError); 
+            console.error("Error en la transferencia:", backendError);
             Swal.fire({
                 title: 'Error',
-                text: backendError?.error || backendError?.msg ||'Error al realizar la transferencia',
+                text: backendError?.error || backendError?.msg || 'Error al realizar la transferencia',
                 icon: 'error'
             });
             throw error;

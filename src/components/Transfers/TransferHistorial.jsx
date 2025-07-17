@@ -257,7 +257,7 @@ const TransferHistorial = () => {
                   
                   const displayReference = transfer.referencia || transfer._id || 'N/A';
                   const displayAmount = `${transfer.moneda} ${transfer.monto?.toFixed(2)}`;
-                  const displayDate = `${new Date(transfer.fecha).toLocaleDateString()} ${new Date(transfer.fecha).toLocaleTimeString()}`;
+                  const displayDate = `${new Date(transfer.createdAt).toLocaleDateString()} ${new Date(transfer.createdAt).toLocaleTimeString()}`;
                   
                   let displayTypeLabel;
                   let displayIconColor;

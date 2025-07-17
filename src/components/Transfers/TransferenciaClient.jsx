@@ -194,11 +194,18 @@ const TransferenciaClient = () => {
     };
 
     try {
+      console.log("DEBUG: Datos enviados a handleRealizarTransferencia:", transferData);
       const responseData = await handleRealizarTransferencia(transferData);
+      console.log("DEBUG: Respuesta de handleRealizarTransferencia (responseData):", responseData); // <--- ¡VALOR CRÍTICO A REVISAR!
       setLastTransferDetails(responseData);
       setShowTransferSummary(true);
+      console.log("DEBUG: showTransferSummary después de set:", true);
+      console.log("DEBUG: lastTransferDetails después de set:", responseData);
     } catch (error) {
-      console.error("Error al realizar la transferencia en el componente:", error);
+      console.error("DEBUG: Error al realizar la transferencia en el componente:", error);
+      // Si hay un error, asegúrate de que el resumen no se muestre
+      setLastTransferDetails(null);
+      setShowTransferSummary(false);
     }
   };
 
@@ -304,6 +311,9 @@ const TransferenciaClient = () => {
         setAddingFavorite(false);
     }
   };
+
+  // DEBUG: Log state values before rendering
+  console.log("DEBUG: Render cycle - showTransferSummary:", showTransferSummary, "lastTransferDetails:", lastTransferDetails);
 
   return (
     <Layout>
@@ -468,17 +478,17 @@ const TransferenciaClient = () => {
               <h2 className="text-xl font-bold mb-4 text-gray-900">Detalles de la Transferencia Realizada:</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
                 <p>
-                  <strong>Referencia:</strong> {lastTransferDetails.referencia}
+                  <strong>Referencia:</strong> {lastTransferDetails.referencia || 'N/A'}
                 </p>
                 <p><strong>Fecha:</strong> {new Date(lastTransferDetails.createdAt).toLocaleDateString()} {new Date(lastTransferDetails.createdAt).toLocaleTimeString() }</p>
-                <p><strong>Monto:</strong> {lastTransferDetails.moneda} {lastTransferDetails.monto?.toFixed(2)}</p>
-                <p><strong>Cuenta Emisora:</strong> {formData.cuentaEmisor}</p>
+                <p><strong>Monto:</strong> {lastTransferDetails.moneda || 'N/A'} {lastTransferDetails.monto?.toFixed(2) || 'N/A'}</p>
+                <p><strong>Cuenta Emisora:</strong> {formData.cuentaEmisor || 'N/A'}</p>
                 <p>
-                  <strong>Cuenta Receptora:</strong> {formData.cuentaReceptor}
+                  <strong>Cuenta Receptora:</strong> {formData.cuentaReceptor || 'N/A'}
                 </p>
-                <p><strong>Tipo Cuenta Receptora:</strong> {lastTransferDetails.tipoCuentaReceptor}</p>
-                <p><strong>Alias Receptor:</strong> {formData.aliasReceptor}</p>
-                <p><strong>Banco Receptor:</strong> {formData.bancoReceptor}</p>
+                <p><strong>Tipo Cuenta Receptora:</strong> {lastTransferDetails.tipoCuentaReceptor || 'N/A'}</p>
+                <p><strong>Alias Receptor:</strong> {formData.aliasReceptor || 'N/A'}</p>
+                <p><strong>Banco Receptor:</strong> {formData.bancoReceptor || 'N/A'}</p>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
