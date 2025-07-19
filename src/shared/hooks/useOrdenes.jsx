@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { postOrden, getOrdenesProductos, getOrdenesServicios, getProductos, getServices } from "../../services/api";
+import { postOrden, getOrdenesProductos, getOrdenesServicios, getProductos, getServices, getVerMisOrdenes } from "../../services/api";
 
 export const useOrdenes = () => {
     const [ordenes, setOrdenes] = useState([]);
@@ -89,5 +89,17 @@ export const useOrdenes = () => {
         }
     }
 
-    return { ordenes, productos, services, loading, handlePostOrden, handleGetOrdenesProductos, handleGetOrdenesServicios, handleGetProductos, handleGetServices }
+    const handleGetMisOrdenes = async () => {
+        setLoading(true);
+        try {
+            const response = await getVerMisOrdenes();
+            setOrdenes(response.data.ordenes || []);
+        } catch (error) {
+            showErrorAlert(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return { ordenes, productos, services, loading, setProductos, handlePostOrden, handleGetOrdenesProductos, handleGetOrdenesServicios, handleGetProductos, handleGetServices, handleGetMisOrdenes }
 }

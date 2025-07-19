@@ -4,55 +4,91 @@ import { PlusCircle, Trash, DollarSign, Package, Calendar } from "lucide-react";
 import { useOrdenes } from "../../shared/hooks/useOrdenes";
 
 const OrdenComponent = () => {
-    const { handlePostOrden, handleGetProductos, handleGetServices, handleGetOrdenesProductos, productos, services, ordenes, loading } = useOrdenes();
+    const {
+        handlePostOrden,
+        handleGetProductos,
+        handleGetServices,
+        handleGetMisOrdenes,
+        productos,
+        services,
+        ordenes,
+        loading,
+        setProductos
+    } = useOrdenes();
 
     const [formData, setFormData] = useState({
         moneda: "GTQ",
         metodoPago: "dinero",
-        items: [{ tipo: "producto", nombre: "", cantidad: 1 }]
+        items: [{ tipo: "producto", nombre: "", cantidad: 1 }],
     });
 
     useEffect(() => {
         handleGetProductos();
         handleGetServices();
-        handleGetOrdenesProductos();
+        handleGetMisOrdenes();
     }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    }
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
 
     const handleItemChange = (index, field, value) => {
         const updatedItems = [...formData.items];
         updatedItems[index][field] = field === "cantidad" ? parseInt(value) : value;
-        setFormData(prev => ({ ...prev, items: updatedItems }));
-    }
+        setFormData((prev) => ({ ...prev, items: updatedItems }));
+    };
 
     const handleAddItem = () => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            items: [...prev.items, { tipo: "producto", nombre: "", cantidad: 1 }]
-        }))
-    }
+            items: [...prev.items, { tipo: "producto", nombre: "", cantidad: 1 }],
+        }));
+    };
 
     const handleRemoveItem = (index) => {
         if (formData.items.length === 1) return;
         const updatedItems = [...formData.items];
         updatedItems.splice(index, 1);
-        setFormData(prev => ({ ...prev, items: updatedItems }));
-    }
+        setFormData((prev) => ({ ...prev, items: updatedItems }));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const tipo = formData.items[0]?.tipo; // Se asume que todos los ítems son del mismo tipo
+
+        const hasValidItem = formData.items.some(
+            (item) => item.nombre && item.cantidad > 0
+        );
+        if (!hasValidItem) {
+            alert("Debe agregar al menos un producto o servicio válido.");
+            return;
+        }
+
+        const productosItems = formData.items.filter((item) => item.tipo === "producto");
+        for (const item of productosItems) {
+            const producto = productos.find((p) => p.nombre === item.nombre);
+            if (!producto) {
+                alert(`Producto ${item.nombre} no encontrado.`);
+                return;
+            }
+            if (producto.stock < item.cantidad) {
+                alert(
+                    `No hay suficiente stock para el producto "${item.nombre}". Stock disponible: ${producto.stock}`
+                );
+                return;
+            }
+        }
+
+        const tipo = formData.items[0]?.tipo;
         await handlePostOrden(formData, tipo);
+
         setFormData({
             moneda: "GTQ",
             metodoPago: "dinero",
-            items: [{ tipo: "producto", nombre: "", cantidad: 1 }]
-        });
-        handleGetOrdenesProductos();
+            items: [{ tipo: "producto", nombre: "", cantidad: 1 }],
+        })
+
+        handleGetMisOrdenes();
     }
 
     return (
@@ -103,7 +139,7 @@ const OrdenComponent = () => {
                                             <select
                                                 className="form-select"
                                                 value={item.tipo}
-                                                onChange={e => handleItemChange(index, "tipo", e.target.value)}
+                                                onChange={(e) => handleItemChange(index, "tipo", e.target.value)}
                                             >
                                                 <option value="producto">Producto</option>
                                                 <option value="servicio">Servicio</option>
@@ -114,18 +150,18 @@ const OrdenComponent = () => {
                                             <select
                                                 className="form-select"
                                                 value={item.nombre}
-                                                onChange={e => handleItemChange(index, "nombre", e.target.value)}
+                                                onChange={(e) => handleItemChange(index, "nombre", e.target.value)}
                                                 required
                                             >
                                                 <option value="">-- Selecciona {item.tipo} --</option>
                                                 {item.tipo === "producto" &&
-                                                    productos.map(prod => (
+                                                    productos.map((prod) => (
                                                         <option key={prod._id} value={prod.nombre}>
                                                             {prod.nombre}
                                                         </option>
                                                     ))}
                                                 {item.tipo === "servicio" &&
-                                                    services.map(serv => (
+                                                    services.map((serv) => (
                                                         <option key={serv._id} value={serv.nombre}>
                                                             {serv.nombre}
                                                         </option>
@@ -140,7 +176,7 @@ const OrdenComponent = () => {
                                                 placeholder="Cantidad"
                                                 min={1}
                                                 value={item.cantidad}
-                                                onChange={e => handleItemChange(index, "cantidad", e.target.value)}
+                                                onChange={(e) => handleItemChange(index, "cantidad", e.target.value)}
                                                 required
                                             />
                                         </div>
@@ -168,11 +204,7 @@ const OrdenComponent = () => {
                             </div>
 
                             <div className="col-12 text-end mt-4">
-                                <button
-                                    type="submit"
-                                    className="btn btn-success px-4"
-                                    disabled={loading}
-                                >
+                                <button type="submit" className="btn btn-success px-4" disabled={loading}>
                                     {loading ? "Guardando..." : "Crear Orden"}
                                 </button>
                             </div>
@@ -189,7 +221,7 @@ const OrdenComponent = () => {
                     <p className="text-muted text-center">No hay órdenes registradas!</p>
                 ) : (
                     <div className="row g-4">
-                        {ordenes.map(orden => (
+                        {ordenes.map((orden) => (
                             <div key={orden._id} className="col-md-6 col-lg-4">
                                 <div className="card shadow-sm h-100">
                                     <div className="card-body">
@@ -200,15 +232,21 @@ const OrdenComponent = () => {
                                         <ul className="list-unstyled">
                                             <li className="mb-2 d-flex align-items-center">
                                                 <DollarSign className="me-2 text-success" size={16} />
-                                                <span><strong>Moneda:</strong> {orden.moneda}</span>
+                                                <span>
+                                                    <strong>Moneda:</strong> {orden.moneda}
+                                                </span>
                                             </li>
                                             <li className="mb-2 d-flex align-items-center">
                                                 <Package className="me-2 text-info" size={16} />
-                                                <span><strong>Método de pago:</strong> {orden.metodoPago}</span>
+                                                <span>
+                                                    <strong>Método de pago:</strong> {orden.metodoPago}
+                                                </span>
                                             </li>
                                             <li className="mb-2 d-flex align-items-center">
                                                 <Calendar className="me-2 text-muted" size={16} />
-                                                <span><strong>Fecha:</strong> {new Date(orden.createdAt).toLocaleDateString()}</span>
+                                                <span>
+                                                    <strong>Fecha:</strong> {new Date(orden.createdAt).toLocaleDateString()}
+                                                </span>
                                             </li>
                                         </ul>
 
