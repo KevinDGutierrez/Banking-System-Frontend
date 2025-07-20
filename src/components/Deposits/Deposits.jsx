@@ -41,9 +41,6 @@ const DepositAdmin = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log('🔄 Iniciando carga de datos...')
-                
-                // Cargar datos en paralelo
                 const results = await Promise.all([
                     handleGetAccountBanking(),
                     handleGetDeposits()
@@ -97,7 +94,6 @@ const DepositAdmin = () => {
                 result = await handlePostDeposit(depositData)
             }
 
-            // Limpiar formulario
             setFormData({
                 cuenta: '',
                 monto: 0,
@@ -105,8 +101,6 @@ const DepositAdmin = () => {
                 descripcion: ''
             })
 
-            // Recargar datos
-            console.log('🔄 Recargando depósitos...')
             await handleGetDeposits()
             
         } catch (error) {
@@ -135,18 +129,15 @@ const DepositAdmin = () => {
     }
 
     const handleDelete = async (depositId) => {
-        console.log('🗑️ Eliminando depósito:', depositId)
         try {
             await handleDeleteDeposit(depositId)
-            console.log('✅ Depósito eliminado')
-            await handleGetDeposits() // Recargar después de eliminar
+            await handleGetDeposits()
         } catch (error) {
             console.error('❌ Error al eliminar depósito:', error)
         }
     }
 
     const handleRefresh = async () => {
-        console.log('🔄 Refrescando datos manualmente...')
         setIsLoading(true)
         try {
             await handleGetDeposits()

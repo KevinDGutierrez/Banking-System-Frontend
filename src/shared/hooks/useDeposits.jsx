@@ -15,7 +15,6 @@ export const useDeposit = () => {
         try {
             setLoading(true)
             const response = await getDeposits();
-            console.log(response.data.data, "Depositos");
             setDeposits(response.data.data)
         } catch (error) {
             const backendError = error.response?.data;
@@ -32,7 +31,6 @@ export const useDeposit = () => {
         try {
             setLoading(true)
             const response = await getDepositsById(id);
-            console.log(response.data.data, "datos");
             setDeposits(response.data.data)
         } catch (error) {
             const backendError = error.response?.data;
@@ -49,7 +47,6 @@ export const useDeposit = () => {
         try {
             setLoading(true)
             const response = await getDepositsByAccount(cuenta);
-            console.log(response.data.data, "success");
             setDeposits(response.data.data)
         } catch (error) {
             const backendError = error.response?.data;
@@ -66,7 +63,6 @@ export const useDeposit = () => {
         try {
             setLoading(true);
             const response = await postDeposits(data)
-            console.log(response);
 
             Swal.fire({
                 title:'Deposito Exitoso',
@@ -110,7 +106,6 @@ export const useDeposit = () => {
             try{
                 setLoading(true);
                 const response = await putDeposits(id, data);
-                console.log(response.data, 'datos actualizados');
 
                 await Swal.fire({
                     title: 'Deposito Actualizado',
