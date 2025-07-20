@@ -11,7 +11,6 @@ export const useClients = () => {
     const handleGetClientes = async () => {
         try {
             const response = await getClientesByAdmin();
-            console.log(response);
             setClientes(response.data);
         } catch (error) {
             const backendError = error.response?.data;

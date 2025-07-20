@@ -10,7 +10,6 @@ export const useClientsAdminHook = () => {
     const handleDatosPendientes = async () => {
         try {
             const response = await getDatosPendientes();
-            console.log(response.data, "datos");
             setClients(response.data.datosPendientes)
         } catch (error) {
             const backendError = error.response?.data;

@@ -13,7 +13,6 @@ export const useAccountBanking = () => {
     const handleGetAccountBanking = async () => {
         try {
             const response = await getAccountsBanking();
-            console.log(response, "cuentas bancarias");
             setAccountBanking(response.data);
         } catch (error) {
             const backendError = error.response?.data;
@@ -124,7 +123,6 @@ export const useAccountBanking = () => {
     const handleGetAccountBankingUser = async () => {
         try {
             const response = await getAccountUserBanking();
-            console.log(response, "cuentas cliente unique")
             setAccountBankingUser(response.data)
         } catch (error) {
             const backendError = error.response?.data;
@@ -171,7 +169,6 @@ export const useAccountBanking = () => {
     const handleGetOpciones = async () => {
         try {
             const response = await getOpciones();
-            console.log(response);
             setTiposCuenta(response.data.tiposCuentas);
             setMonedas(response.data.monedasCuentas);
         } catch (error) {

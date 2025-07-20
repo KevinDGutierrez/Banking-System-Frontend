@@ -9,7 +9,6 @@ export const useBanking = () => {
     const handleGetBanking = async () => {
         try {
             const response = await getBanking();
-            console.log(response, "bancos");
             setBanking(response.data);
         } catch (error) {
             const backendError = error.response?.data;

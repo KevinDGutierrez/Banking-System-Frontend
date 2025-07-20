@@ -24,11 +24,9 @@ export const useMyAccountEdit = () => {
         setIsLoading(true);
         try {
             const response = await myAccount(formData);
-            console.log(response, "datos actualizados")
             const { message, cliente } = response.data;
 
             setMyData(cliente);
-            console.log(cliente, "datos actualizados")
 
             Swal.fire({
                 icon: 'success',

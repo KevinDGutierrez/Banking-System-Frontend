@@ -106,7 +106,6 @@ export const useRegister = () => {
     const handleGetOpciones = async () => {
         try {
             const response = await getOpciones();
-            console.log(response);
             setTiposCuenta(response.data.tiposCuentas);
         } catch (error) {
             const backendError = error.response?.data;

@@ -7,7 +7,6 @@ export const useMyAccountApplication = () => {
     const [myDataAccount, setMyDataAccount] = useState(null);
 
     const handleMyAccountApplication = async (formDataAccount, resetForm) => {
-        console.log("enviando solicitud de cambio", formDataAccount);
         const { isConfirmed } = await Swal.fire({
             title: "¿Estás seguro?",
             text: "¿Quieres solicitar una nueva solicitud de cuenta?",
@@ -28,7 +27,6 @@ export const useMyAccountApplication = () => {
                 Object.entries(formDataAccount).filter(([_, value]) => value && value.trim() !== "")
             );
             const response = await myAccountApplication(datosFiltrados);
-            console.log("respuesta solicitud:", response.data);
             const { message, cliente } = response.data;
 
             setMyDataAccount(cliente);

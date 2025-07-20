@@ -90,7 +90,6 @@ export const useLogin = () => {
     const handleRecuperacion = async (data) => {
         try {
             const response = await solicitarRecuperacion(data);
-            console.log("Recuperación solicitada:", response);
 
             await showAlert(
                 'success',
@@ -114,7 +113,6 @@ export const useLogin = () => {
 
     const handleResetPassword = async (data) => {
         try {
-            console.log("Datos de reseteo de contraseña:", data);
             const response = await resetPassword(data);
             console.log("Contraseña restablecida:", response);
 

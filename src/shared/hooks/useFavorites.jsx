@@ -9,7 +9,6 @@ export const useFavorites = () => {
     const handleGetFavorites = async () => {
         try {
             const response = await getFavorites();
-            console.log(response);
             setFavoritos(response.data);
         } catch (error) {
             const backendError = error.response?.data;

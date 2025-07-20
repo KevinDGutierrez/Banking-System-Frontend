@@ -12,7 +12,6 @@ export const useAdminDashboard = () => {
     const handleClienteNumber = async () => {
         try {
             const response = await getByClienteNumber();
-            console.log(response, "cliente number");
             setClienteNumber(response.data.cantidadClientes);
         } catch (error) {
             const backendError = error.response?.data;
@@ -23,7 +22,6 @@ export const useAdminDashboard = () => {
     const handleCuentasActivas = async () => {
         try {
             const response = await getByNumeroCuentasActivas();
-            console.log(response, "cuentas activas");
             setCuentasActivas(response.data.numeroCuentas);
         } catch (error) {
             const backendError = error.response?.data;
@@ -34,7 +32,6 @@ export const useAdminDashboard = () => {
     const handleTransaccionesHoy = async () => {
         try {
             const response = await getByNumeroTransaccionesHoy();
-            console.log(response, "transacciones");
             setTransaccionesHoy(response.data.total);
         } catch (error) {
             const backendError = error.response?.data;
@@ -45,7 +42,6 @@ export const useAdminDashboard = () => {
     const handleIngresos = async () => {
         try {
             const response = await getIngresos();
-            console.log(response, "ingresos");
             setIngresos(response.data);
         } catch (error) {
             const backendError = error.response?.data;
@@ -56,7 +52,6 @@ export const useAdminDashboard = () => {
     const handleIngresosByPromedio = async () => {
         try {
             const response = await getIngresosByPromedio();
-            console.log(response, "ingresos promedio");
             setIngresosByPromedio(response.data.promedio);
         } catch (error) {
             const backendError = error.response?.data;
@@ -67,7 +62,6 @@ export const useAdminDashboard = () => {
     const handleTransfersByMoneda = async () => {
         try {
             const response = await getTransfersByMoneda();
-            console.log(response, "transferencias");
             setTransfersByMoneda(response.data);
         } catch (error) {
             const backendError = error.response?.data;
