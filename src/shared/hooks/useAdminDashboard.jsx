@@ -15,7 +15,6 @@ export const useAdminDashboard = () => {
             setClienteNumber(response.data.cantidadClientes);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
@@ -25,7 +24,6 @@ export const useAdminDashboard = () => {
             setCuentasActivas(response.data.numeroCuentas);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
@@ -35,7 +33,6 @@ export const useAdminDashboard = () => {
             setTransaccionesHoy(response.data.total);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
@@ -45,7 +42,6 @@ export const useAdminDashboard = () => {
             setIngresos(response.data);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
@@ -55,7 +51,6 @@ export const useAdminDashboard = () => {
             setIngresosByPromedio(response.data.promedio);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
@@ -65,7 +60,6 @@ export const useAdminDashboard = () => {
             setTransfersByMoneda(response.data);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
     return { clienteNumber, cuentasActivas, transaccionesHoy, ingresos, ingresosByPromedio, transfersByMoneda, handleClienteNumber, handleCuentasActivas, handleTransaccionesHoy, handleIngresos, handleIngresosByPromedio, handleTransfersByMoneda };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { realizarTransferenciaInterbancaria, getInterbankTransfers, getInterbankTransferById } from '../../services/api'; 
+import { realizarTransferenciaInterbancaria, getInterbankTransfers, getInterbankTransferById } from '../../services/api';
 
 export const useInterbankTransfer = () => {
     const [loading, setLoading] = useState(false);
@@ -10,7 +10,6 @@ export const useInterbankTransfer = () => {
     const handleRealizarTransferenciaInterbancaria = async (transferData) => {
         try {
             setLoading(true);
-            console.log("Realizando transferencia interbancaria con datos:", transferData);
 
             const response = await realizarTransferenciaInterbancaria(transferData);
 
@@ -21,11 +20,10 @@ export const useInterbankTransfer = () => {
                 timer: 2000
             });
 
-            return response.data.transferencia; 
+            return response.data.transferencia;
 
         } catch (error) {
             const backendError = error.response?.data;
-            console.error("Error en la transferencia interbancaria (frontend):", backendError || error.message || error);
             Swal.fire({
                 title: 'Error',
                 text: backendError?.error || backendError?.msg || 'Error al obtener las transferencia interbancaria',
@@ -44,7 +42,6 @@ export const useInterbankTransfer = () => {
             setInterbankTransfers(response.data.transferencias);
         } catch (error) {
             const backendError = error.response?.data;
-            console.error("Error en la transferencia interbancaria (frontend):", backendError || error.message || error);
             Swal.fire({
                 title: 'Error',
                 text: backendError?.error || backendError?.msg || 'Error al realizar la transferencia interbancaria',
@@ -63,7 +60,6 @@ export const useInterbankTransfer = () => {
             setInterbankTransfer(response.data.transferencia);
         } catch (error) {
             const backendError = error.response?.data;
-            console.error("Error en la transferencia interbancaria (frontend):", backendError || error.message || error);
             Swal.fire({
                 title: 'Error',
                 text: backendError?.error || backendError?.msg || 'Error al obtener la transferencia por id',

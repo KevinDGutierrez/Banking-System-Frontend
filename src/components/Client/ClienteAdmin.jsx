@@ -71,13 +71,13 @@ const ClienteAdmin = () => {
                     <div>
                         <div className="relative">
                             <button
-                            onClick={handleAbrir}
-                            className="absolute top-4 right-4 z-20 overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 group"
-                        >
-                            <span className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                            <UserCheck size={18} className="relative z-10 transition-transform duration-300 group-hover:scale-110" />
-                            <span className="relative z-10 text-sm transition-transform duration-300 group-hover:scale-105">Aprobación de datos de clientes</span>
-                        </button>
+                                onClick={handleAbrir}
+                                className="absolute top-4 right-4 z-20 overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5 group"
+                            >
+                                <span className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                                <UserCheck size={18} className="relative z-10 transition-transform duration-300 group-hover:scale-110" />
+                                <span className="relative z-10 text-sm transition-transform duration-300 group-hover:scale-105">Aprobación de datos de clientes</span>
+                            </button>
 
                         </div>
                         <Dialog

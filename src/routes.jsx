@@ -3,8 +3,8 @@ import Login from "./components/Login";
 
 const routes = [
     {
-        path : "/",
-        element : <Login/>
+        path: "/",
+        element: <Login />
     }
 ]
 

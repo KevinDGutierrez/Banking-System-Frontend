@@ -85,18 +85,18 @@ export const AppRoutes = () => {
                 </PrivateRoute>
             )
         },
-        { 
+        {
             path: "/solicitudCredito", element: (
                 <PrivateRoute roles={["CLIENTE"]}>
                     <CreditoClient />
                 </PrivateRoute>
             )
         },
-        { 
+        {
             path: "/aprobarCredito", element: (
                 <PrivateRoute roles={["ADMIN"]}>
                     <CreditoAdmin />
-                    </PrivateRoute>
+                </PrivateRoute>
             )
         },
         {

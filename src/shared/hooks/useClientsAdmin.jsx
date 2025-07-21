@@ -41,7 +41,6 @@ export const useClientsAdminHook = () => {
             try {
                 setLoading(true);
                 const response = await updateClienteAdmin(id, data);
-                console.log(response, "datos recibidos");
 
                 await Swal.fire({
                     title: 'Datos Actualizados',
@@ -62,7 +61,7 @@ export const useClientsAdminHook = () => {
                     text: backendError?.error || backendError?.msg || 'Error',
                     icon: 'error',
                     customClass: {
-                         popup: 'swal-custom-zindex'
+                        popup: 'swal-custom-zindex'
                     }
                 });
             } finally {
@@ -77,8 +76,3 @@ export const useClientsAdminHook = () => {
         handleUpdateClientAdmin
     }
 }
-
-
-
-
-

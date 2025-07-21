@@ -1,5 +1,5 @@
-import {useState} from 'react';
-import {getUltimaTransaccion, getSaldoTotal, getVerMisOrdenes, getVerMisPuntos} from '../../services/api';
+import { useState } from 'react';
+import { getUltimaTransaccion, getSaldoTotal, getVerMisOrdenes, getVerMisPuntos } from '../../services/api';
 
 export const useClienteDashboard = () => {
     const [ultimaTransaccion, setUltimaTransaccion] = useState([]);
@@ -13,7 +13,6 @@ export const useClienteDashboard = () => {
             setUltimaTransaccion(response.data.monto);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
@@ -23,7 +22,6 @@ export const useClienteDashboard = () => {
             setSaldoTotal(response.data.saldo);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
@@ -33,7 +31,6 @@ export const useClienteDashboard = () => {
             setMisPuntos(response.data);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
@@ -43,10 +40,9 @@ export const useClienteDashboard = () => {
             setMisOrdenes(response.data);
         } catch (error) {
             const backendError = error.response?.data;
-            console.log(backendError);
         }
     }
 
 
-    return {ultimaTransaccion, saldoTotal, misOrdenes, misPuntos, handleUltimaTransaccion, handleSaldoTotal, handleMisPuntos, handleMisOrdenes};
+    return { ultimaTransaccion, saldoTotal, misOrdenes, misPuntos, handleUltimaTransaccion, handleSaldoTotal, handleMisPuntos, handleMisOrdenes };
 }

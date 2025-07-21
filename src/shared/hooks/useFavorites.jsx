@@ -26,7 +26,6 @@ export const useFavorites = () => {
         try {
             setLoading(true);
             const response = await addFavorite(data);
-            console.log(response);
 
             Swal.fire({
                 title: 'Favorito agregado',

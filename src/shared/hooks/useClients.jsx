@@ -28,7 +28,6 @@ export const useClients = () => {
         try {
             setLoading(true);
             const response = await AprobarCliente(id);
-            console.log(response);
 
             Swal.fire({
                 title: 'Cliente Aprobado',
@@ -54,7 +53,7 @@ export const useClients = () => {
         }
     }
 
-    
+
 
 
     return { clientes, handleGetClientes, handleAprobarCliente };

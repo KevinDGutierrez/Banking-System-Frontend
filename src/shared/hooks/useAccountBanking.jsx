@@ -44,7 +44,6 @@ export const useAccountBanking = () => {
             try {
                 setLoading(true);
                 const response = await AprobarCuentaBancaria(numeroCuenta);
-                console.log(response);
 
                 await Swal.fire({
                     title: 'Cuenta Aprobada',
@@ -92,7 +91,6 @@ export const useAccountBanking = () => {
             try {
                 setLoading(true);
                 const response = await deleteAccounts(id);
-                console.log(response);
 
                 await Swal.fire({
                     title: 'Cuenta Eliminada',
@@ -139,7 +137,6 @@ export const useAccountBanking = () => {
         try {
             setLoading(true);
             const response = await addAccountBanking(data);
-            console.log(response);
 
             await Swal.fire({
                 title: 'Cuenta Agregada',

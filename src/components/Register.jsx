@@ -519,8 +519,8 @@ export const Register = ({ switchAuthHandler }) => {
                   type="submit"
                   disabled={isSubmitButtonDisable}
                   className={`w-full py-3 px-4 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isSubmitButtonDisable
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-blue-600 hover:bg-blue-700 text-white"
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
                     }`}
                 >
                   {isLoading ? (

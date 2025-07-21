@@ -52,12 +52,17 @@ const TransferenciaClient = () => {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       return JSON.parse(jsonPayload);
     } catch (e) {
-      console.error("Error al decodificar el token JWT:", e);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al decodificar el token JWT',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      })
       return null;
     }
   };
@@ -86,22 +91,20 @@ const TransferenciaClient = () => {
           if (user.token) {
             const decodedToken = decodeJwt(user.token);
             if (decodedToken && decodedToken.uid) {
-              user.id = decodedToken.uid; 
+              user.id = decodedToken.uid;
             } else {
-              console.warn('Token JWT no contiene UID o no pudo ser decodificado.');
               user = null;
               localStorage.removeItem('user');
             }
           }
-          setCurrentUser(user); 
+          setCurrentUser(user);
         }
       } catch (e) {
-        console.error("Error al parsear el usuario de localStorage o decodificar token:", e);
         localStorage.removeItem('user');
         user = null;
       }
 
-      if (user && user.id) { 
+      if (user && user.id) {
         try {
           const response = await getAccountUserBanking();
           const accounts = response.data.cuentas || response.data;
@@ -113,25 +116,40 @@ const TransferenciaClient = () => {
             }));
           }
         } catch (error) {
-          console.error('Error al obtener cuentas del usuario:', error);
+          Swal.fire({
+            title: 'Error',
+            text: 'Error al obtener cuentas del usuario',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar'
+          })
         }
       } else {
-        console.warn('No hay usuario logueado (o su ID) para cargar cuentas.');
+        Swal.fire({
+          title: 'Error',
+          text: 'No hay usuario logueado para cargar cuentas',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar'
+        })
       }
       setFetchingAccounts(false);
     };
 
     const loadBankingOptions = async () => {
-        setFetchingBanks(true);
-        try {
-            const response = await getBanking();
-            const banks = response.data.bancos || response.data;
-            setBankingOptions(banks);
-        } catch (error) {
-            console.error('Error al obtener opciones de bancos:', error);
-        } finally {
-            setFetchingBanks(false);
-        }
+      setFetchingBanks(true);
+      try {
+        const response = await getBanking();
+        const banks = response.data.bancos || response.data;
+        setBankingOptions(banks);
+      } catch (error) {
+        Swal.fire({
+          title: 'Error',
+          text: 'Error al obtener bancos',
+          icon: 'warning',
+          confirmButtonText: 'Aceptar'
+        })
+      } finally {
+        setFetchingBanks(false);
+      }
     };
 
     loadUserDataAndAccounts();
@@ -194,16 +212,10 @@ const TransferenciaClient = () => {
     };
 
     try {
-      console.log("DEBUG: Datos enviados a handleRealizarTransferencia:", transferData);
       const responseData = await handleRealizarTransferencia(transferData);
-      console.log("DEBUG: Respuesta de handleRealizarTransferencia (responseData):", responseData); // <--- ¡VALOR CRÍTICO A REVISAR!
       setLastTransferDetails(responseData);
       setShowTransferSummary(true);
-      console.log("DEBUG: showTransferSummary después de set:", true);
-      console.log("DEBUG: lastTransferDetails después de set:", responseData);
     } catch (error) {
-      console.error("DEBUG: Error al realizar la transferencia en el componente:", error);
-      // Si hay un error, asegúrate de que el resumen no se muestre
       setLastTransferDetails(null);
       setShowTransferSummary(false);
     }
@@ -226,94 +238,95 @@ const TransferenciaClient = () => {
     setSavingLoading(true);
 
     try {
-        const canvas = await html2canvas(transferSummaryRef.current, {
-            scale: 2,
-            useCORS: true,
-            logging: true,
-            backgroundColor: '#ffffff',
-            onclone: (clonedDoc) => {
-                const fontElements = clonedDoc.querySelectorAll('font');
-                fontElements.forEach(fontEl => {
-                    while (fontEl.firstChild) {
-                        fontEl.parentNode.insertBefore(fontEl.firstChild, fontEl);
-                    }
-                    fontEl.parentNode.removeChild(fontEl);
-                });
-                const elements = clonedDoc.querySelectorAll('*');
-                elements.forEach(el => {
-                    if (el.style) {
-                        el.style.color = '#000000'; 
-                        el.style.backgroundColor = 'transparent'; 
-                        el.style.borderColor = '#000000';
-
-                        el.style.outlineColor = 'rgba(0, 0, 0, 0)'; 
-                        el.style.textDecorationColor = 'rgba(0, 0, 0, 0)'; 
-                        el.style.caretColor = '#000000';
-                        el.style.accentColor = '#000000';
-
-                        if (el.classList.contains('bg-gradient-to-r')) {
-                            el.style.backgroundImage = 'linear-gradient(to right, rgb(109, 40, 217), rgb(79, 70, 229))';
-                        }
-                    }
-                });
+      const canvas = await html2canvas(transferSummaryRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          const fontElements = clonedDoc.querySelectorAll('font');
+          fontElements.forEach(fontEl => {
+            while (fontEl.firstChild) {
+              fontEl.parentNode.insertBefore(fontEl.firstChild, fontEl);
             }
-        });
+            fontEl.parentNode.removeChild(fontEl);
+          });
+          const elements = clonedDoc.querySelectorAll('*');
+          elements.forEach(el => {
+            if (el.style) {
+              el.style.color = '#000000';
+              el.style.backgroundColor = 'transparent';
+              el.style.borderColor = '#000000';
 
-        const image = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.href = image;
-        link.download = `transferencia_${lastTransferDetails?.referencia || new Date().getTime()}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+              el.style.outlineColor = 'rgba(0, 0, 0, 0)';
+              el.style.textDecorationColor = 'rgba(0, 0, 0, 0)';
+              el.style.caretColor = '#000000';
+              el.style.accentColor = '#000000';
 
-        Swal.fire({
-            title: 'Guardado',
-            text: 'La imagen de la transferencia se ha guardado correctamente.',
-            icon: 'success',
-            timer: 1500,
-        });
+              if (el.classList.contains('bg-gradient-to-r')) {
+                el.style.backgroundImage = 'linear-gradient(to right, rgb(109, 40, 217), rgb(79, 70, 229))';
+              }
+            }
+          });
+        }
+      });
+
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `transferencia_${lastTransferDetails?.referencia || new Date().getTime()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      Swal.fire({
+        title: 'Guardado',
+        text: 'La imagen de la transferencia se ha guardado correctamente.',
+        icon: 'success',
+        timer: 1500,
+      });
     } catch (error) {
-        console.error('Error al guardar la imagen:', error);
-        Swal.fire({
-            title: 'Error',
-            text: 'No se pudo guardar la imagen de la transferencia.',
-            icon: 'error',
-        });
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo guardar la imagen de la transferencia.',
+        icon: 'error',
+      });
     } finally {
-        setSavingLoading(false);
+      setSavingLoading(false);
     }
   };
 
   const handleAddFavoriteClick = async () => {
     setAddingFavorite(true);
     try {
-        if (!currentUser || !currentUser.id) {
-            Swal.fire({
-                title: 'Error',
-                text: 'No se pudo obtener el ID del usuario para agregar a favoritos. Por favor, intenta iniciar sesión de nuevo.',
-                icon: 'error',
-            });
-            setAddingFavorite(false);
-            return;
-        }
-
-        const favoriteData = {
-            usuario: currentUser.id, 
-            cuentaDestino: formData.cuentaReceptor, 
-            tipoCuenta: formData.tipoCuentaReceptor, 
-            alias: formData.aliasReceptor, 
-        };
-        await handleAddFavorite(favoriteData);
-    } catch (error) {
-        console.error("Error al agregar favorito:", error);
-    } finally {
+      if (!currentUser || !currentUser.id) {
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo obtener el ID del usuario para agregar a favoritos. Por favor, intenta iniciar sesión de nuevo.',
+          icon: 'error',
+        });
         setAddingFavorite(false);
+        return;
+      }
+
+      const favoriteData = {
+        usuario: currentUser.id,
+        cuentaDestino: formData.cuentaReceptor,
+        tipoCuenta: formData.tipoCuentaReceptor,
+        alias: formData.aliasReceptor,
+      };
+      await handleAddFavorite(favoriteData);
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al agregar favorito',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      })
+    } finally {
+      setAddingFavorite(false);
     }
   };
-
-  // DEBUG: Log state values before rendering
-  console.log("DEBUG: Render cycle - showTransferSummary:", showTransferSummary, "lastTransferDetails:", lastTransferDetails);
 
   return (
     <Layout>
@@ -480,7 +493,7 @@ const TransferenciaClient = () => {
                 <p>
                   <strong>Referencia:</strong> {lastTransferDetails.referencia || 'N/A'}
                 </p>
-                <p><strong>Fecha:</strong> {new Date(lastTransferDetails.createdAt).toLocaleDateString()} {new Date(lastTransferDetails.createdAt).toLocaleTimeString() }</p>
+                <p><strong>Fecha:</strong> {new Date(lastTransferDetails.createdAt).toLocaleDateString()} {new Date(lastTransferDetails.createdAt).toLocaleTimeString()}</p>
                 <p><strong>Monto:</strong> {lastTransferDetails.moneda || 'N/A'} {lastTransferDetails.monto?.toFixed(2) || 'N/A'}</p>
                 <p><strong>Cuenta Emisora:</strong> {formData.cuentaEmisor || 'N/A'}</p>
                 <p>

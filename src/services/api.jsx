@@ -120,17 +120,14 @@ export const addFavorite = async (data) => {
 }
 
 export const myAccount = async (data) => {
-    console.log(data)
     return await apiClient.put('users/clientes', data)
 }
 
 export const myAccountApplication = async (data) => {
-    console.log(data)
     return await apiClient.put('users/clientes/solicitud', data)
 }
 
 export const myAccountList = async (data) => {
-    console.log(data)
     return await apiClient.get('users/myAccount', data)
 }
 
@@ -206,32 +203,26 @@ export const getServices = async () => {
 }
 
 export const getTransfers = async () => {
-    console.log('[API Service] Obteniendo lista de todas las transferencias...');
     return await apiClient.get('transfers/');
 };
 
 export const getTransferById = async (id) => {
-    console.log(`[API Service] Obteniendo transferencia por ID: ${id}...`);
     return await apiClient.get(`transfers/${id}`);
 };
 
 export const realizarTransferencia = async (data, bancoReceptor) => {
-    console.log(`[API Service] Enviando POST a: /transferencias/${bancoReceptor} con datos:`, data);
     return await apiClient.post(`transfers/transferencias/${bancoReceptor}`, data);
 };
 
 export const realizarTransferenciaInterbancaria = async (data) => {
-    console.log(`[API Service] Enviando POST a: /transferenciasInterbancaria con datos:`, data);
     return await apiClient.post('interTransfers/transferenciasInterbancaria', data);
 };
 
 export const getInterbankTransfers = async () => {
-    console.log('[API Service] Obteniendo lista de transferencias interbancarias...');
     return await apiClient.get('interTransfers/');
 };
 
 export const getInterbankTransferById = async (id) => {
-    console.log(`[API Service] Obteniendo transferencia interbancaria por ID: ${id}...`);
     return await apiClient.get(`interTransfers/${id}`);
 };
 

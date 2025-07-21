@@ -76,7 +76,7 @@ const MyAccount = () => {
         });
         await handleMyAccountList();
         setIsEditingPassword(false);
- 
+
     };
 
     useEffect(() => {

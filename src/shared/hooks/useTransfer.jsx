@@ -11,11 +11,9 @@ export const useTransfer = () => {
         try {
             setLoading(true);
             const response = await getTransfers();
-            console.log("Transferencias obtenidas:", response.data.transferencias);
             setTransfers(response.data.transferencias);
         } catch (error) {
             const backendError = error.response?.data;
-            console.error("Error al obtener las transferencias:", backendError?.error || backendError?.msg || error.message);
         } finally {
             setLoading(false);
         }
@@ -34,10 +32,8 @@ export const useTransfer = () => {
                 aliasReceptor
             };
 
-            console.log("Realizando transferencia con datos:", data);
 
             const response = await realizarTransferencia(data, bancoReceptor);
-            console.log("DEBUG useTransfer: Valor de response.data.transferencia ANTES de retornar:", response.data.transferencia);
 
             await Swal.fire({
                 title: 'Transferencia Exitosa',
@@ -50,7 +46,6 @@ export const useTransfer = () => {
 
         } catch (error) {
             const backendError = error.response?.data;
-            console.error("Error en la transferencia:", backendError);
             Swal.fire({
                 title: 'Error',
                 text: backendError?.error || backendError?.msg || 'Error al realizar la transferencia',

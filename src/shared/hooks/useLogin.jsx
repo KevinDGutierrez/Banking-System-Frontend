@@ -114,7 +114,6 @@ export const useLogin = () => {
     const handleResetPassword = async (data) => {
         try {
             const response = await resetPassword(data);
-            console.log("Contraseña restablecida:", response);
 
             await showAlert(
                 'success',

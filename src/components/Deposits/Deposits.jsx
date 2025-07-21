@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Swal from 'sweetalert2'
 
 const DepositAdmin = () => {
-    const { 
+    const {
         deposits,
         loading,
         handleGetDeposits,
@@ -25,7 +25,7 @@ const DepositAdmin = () => {
         handlePutDeposit,
         handleDeleteDeposit
     } = useDeposit()
-    
+
     const { accountBanking, handleGetAccountBanking, loading: loadingCuentas } = useAccountBanking()
     const [isLoading, setIsLoading] = useState(true)
     const [editingDeposit, setEditingDeposit] = useState(null)
@@ -41,21 +41,23 @@ const DepositAdmin = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log('🔄 Iniciando carga de datos...')
-                
-                // Cargar datos en paralelo
                 const results = await Promise.all([
                     handleGetAccountBanking(),
                     handleGetDeposits()
                 ])
-                
+
             } catch (error) {
-                console.error('❌ Error al cargar datos:', error)
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error al cargar las cuentas y depositos',
+                    icon: 'warning',
+                    confirmButtonText: 'Aceptar'
+                })
             } finally {
                 setIsLoading(false)
             }
         }
-        
+
         fetchData()
     }, [])
 
@@ -97,7 +99,6 @@ const DepositAdmin = () => {
                 result = await handlePostDeposit(depositData)
             }
 
-            // Limpiar formulario
             setFormData({
                 cuenta: '',
                 monto: 0,
@@ -105,12 +106,15 @@ const DepositAdmin = () => {
                 descripcion: ''
             })
 
-            // Recargar datos
-            console.log('🔄 Recargando depósitos...')
             await handleGetDeposits()
-            
+
         } catch (error) {
-            console.error('❌ Error al procesar depósito:', error)
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al editar depositos',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            })
         }
     }
 
@@ -135,24 +139,31 @@ const DepositAdmin = () => {
     }
 
     const handleDelete = async (depositId) => {
-        console.log('🗑️ Eliminando depósito:', depositId)
         try {
             await handleDeleteDeposit(depositId)
-            console.log('✅ Depósito eliminado')
-            await handleGetDeposits() // Recargar después de eliminar
+            await handleGetDeposits()
         } catch (error) {
-            console.error('❌ Error al eliminar depósito:', error)
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al eliminar depositos',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            })
         }
     }
 
     const handleRefresh = async () => {
-        console.log('🔄 Refrescando datos manualmente...')
         setIsLoading(true)
         try {
             await handleGetDeposits()
             await handleGetAccountBanking()
         } catch (error) {
-            console.error('❌ Error al refrescar:', error)
+            Swal.fire({
+                title: 'Error',
+                text: 'Error al refrescar',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            })
         } finally {
             setIsLoading(false)
         }
@@ -303,7 +314,7 @@ const DepositAdmin = () => {
                                 >
                                     {loading || isLoading || loadingCuentas ? 'Cargando...' : (editingDeposit ? 'Actualizar Depósito' : 'Crear Depósito')}
                                 </button>
-                                
+
                                 {editingDeposit && (
                                     <button
                                         type="button"

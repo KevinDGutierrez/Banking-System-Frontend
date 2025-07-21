@@ -7,11 +7,6 @@ const Dashboard = () => {
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem('user'));
 
-
-  if (location.state?.message) {
-    console.log(location.state.message);
-  }
-
   return user?.role === 'ADMIN' ? <AdminDashboard /> : <ClientDashboard />;
 };
 

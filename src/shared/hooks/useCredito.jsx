@@ -11,7 +11,6 @@ export const useCredito = () => {
         try {
             setLoading(true);
             const response = await getCreditos();
-            console.log("Créditos obtenidos:", response.data.creditos);
             setCreditos(response.data.creditos);
         } catch (error) {
             const backendError = error.response?.data;
@@ -36,8 +35,6 @@ export const useCredito = () => {
                 cuentaId: numeroCuenta
             }
 
-            console.log("Enviando solicitud con datos:", data);
-
             const response = await solicitarCredito(data);
 
             await Swal.fire({
@@ -50,7 +47,6 @@ export const useCredito = () => {
             await handleGetCreditos();
         } catch (error) {
             const backendError = error.response?.data;
-            console.log("Error al solicitar crédito:", backendError);
             Swal.fire({
                 title: 'Error',
                 text: backendError?.error || backendError?.msg || 'Error al solicitar el crédito',

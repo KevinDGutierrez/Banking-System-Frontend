@@ -335,11 +335,10 @@ const AdminViewTransfer = () => {
                     <tr key={transfer._id} className="hover:bg-blue-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                         <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            transfer.type === "internal"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-indigo-100 text-indigo-800"
-                          }`}
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${transfer.type === "internal"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-indigo-100 text-indigo-800"
+                            }`}
                         >
                           {transfer.type === "internal"
                             ? "Interna"

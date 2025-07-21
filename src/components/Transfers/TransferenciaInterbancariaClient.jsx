@@ -16,7 +16,7 @@ import html2canvas from 'html2canvas';
 
 import { useInterbankTransfer } from '../../shared/hooks/useInterbankTransfer';
 import { useFavorites } from '../../shared/hooks/useFavorites';
-import { getAccountUserBanking, getBanking } from '../../services/api'; 
+import { getAccountUserBanking, getBanking } from '../../services/api';
 
 const TransferenciaInterbancariaClient = () => {
   const navigate = useNavigate();
@@ -32,14 +32,14 @@ const TransferenciaInterbancariaClient = () => {
     bancoReceptor: '',
     tipoCuentaReceptor: '',
     aliasReceptor: '',
-    monto: '', 
+    monto: '',
     moneda: 'GTQ',
-    tipoTransferencia: 'interbancaria', 
+    tipoTransferencia: 'interbancaria',
   };
 
   const [formData, setFormData] = useState(initialFormData);
   const [userAccounts, setUserAccounts] = useState([]);
-  const [bankingOptions, setBankingOptions] = useState([]); 
+  const [bankingOptions, setBankingOptions] = useState([]);
   const [fetchingAccounts, setFetchingAccounts] = useState(true);
   const [fetchingBanks, setFetchingBanks] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
@@ -51,12 +51,17 @@ const TransferenciaInterbancariaClient = () => {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
       return JSON.parse(jsonPayload);
     } catch (e) {
-      console.error("Error al decodificar el token JWT:", e);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al decodificar el token JWT',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      })
       return null;
     }
   };
@@ -88,9 +93,7 @@ const TransferenciaInterbancariaClient = () => {
             const decodedToken = decodeJwt(user.token);
             if (decodedToken && decodedToken.uid) {
               user.id = decodedToken.uid;
-              console.log('Usuario con ID de token:', user);
             } else {
-              console.warn('Token JWT no contiene UID o no pudo ser decodificado.');
               user = null;
               localStorage.removeItem('user');
             }
@@ -98,7 +101,6 @@ const TransferenciaInterbancariaClient = () => {
           setCurrentUser(user);
         }
       } catch (e) {
-        console.error("Error al parsear el usuario de localStorage o decodificar token:", e);
         localStorage.removeItem('user');
         user = null;
       }
@@ -107,7 +109,6 @@ const TransferenciaInterbancariaClient = () => {
         try {
           const response = await getAccountUserBanking();
           const accounts = response.data.cuentas || response.data;
-          console.log('Cuentas cargadas para Emisor:', accounts);
           setUserAccounts(accounts);
           if (accounts.length > 0) {
             setFormData((prev) => ({
@@ -116,7 +117,6 @@ const TransferenciaInterbancariaClient = () => {
             }));
           }
         } catch (error) {
-          console.error('Error al obtener cuentas del usuario:', error);
           Swal.fire({
             title: 'Error',
             text: error.response?.data?.message || 'No se pudieron cargar las cuentas del usuario',
@@ -133,12 +133,11 @@ const TransferenciaInterbancariaClient = () => {
       setFetchingBanks(true);
       try {
         const response = await getBanking();
-        const banks = response.data.bancos || response.data; 
+        const banks = response.data.bancos || response.data;
         console.log('Bancos cargados:', banks);
         const filteredBanks = banks.filter(bank => bank.name.toLowerCase() !== 'banco innova');
         setBankingOptions(filteredBanks);
       } catch (error) {
-        console.error('Error al obtener opciones de bancos:', error);
         Swal.fire({
           title: 'Error',
           text: error.response?.data?.message || 'No se pudieron cargar los bancos disponibles',
@@ -167,8 +166,8 @@ const TransferenciaInterbancariaClient = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'tipoTransferencia') { 
-      return; 
+    if (name === 'tipoTransferencia') {
+      return;
     }
     setFormData((prev) => ({
       ...prev,
@@ -199,20 +198,25 @@ const TransferenciaInterbancariaClient = () => {
       });
       return;
     }
-    
+
     const finalMontoToSend = Number(parsedMonto.toFixed(2));
 
     const interbankTransferData = {
       ...formData,
-      monto: finalMontoToSend, 
+      monto: finalMontoToSend,
     };
 
     try {
-        const responseData = await handleRealizarTransferenciaInterbancaria(interbankTransferData);
-        setLastTransferDetails(responseData);
-        setShowTransferSummary(true);
+      const responseData = await handleRealizarTransferenciaInterbancaria(interbankTransferData);
+      setLastTransferDetails(responseData);
+      setShowTransferSummary(true);
     } catch (error) {
-        console.error("Error al realizar la transferencia interbancaria en el componente:", error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al realizar la transferencia interbancaria',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      })
     }
   };
 
@@ -233,90 +237,94 @@ const TransferenciaInterbancariaClient = () => {
     setSavingLoading(true);
 
     try {
-        const canvas = await html2canvas(transferSummaryRef.current, {
-            scale: 2,
-            useCORS: true,
-            logging: true,
-            backgroundColor: '#ffffff',
-            onclone: (clonedDoc) => {
-                const fontElements = clonedDoc.querySelectorAll('font');
-                fontElements.forEach(fontEl => {
-                    while (fontEl.firstChild) {
-                        fontEl.parentNode.insertBefore(fontEl.firstChild, fontEl);
-                    }
-                    fontEl.parentNode.removeChild(fontEl);
-                });
-
-                const elements = clonedDoc.querySelectorAll('*');
-                elements.forEach(el => {
-                    if (el.style) {
-                        el.style.color = '#000000';
-                        el.style.backgroundColor = 'transparent';
-                        el.style.borderColor = '#000000';
-
-                        el.style.outlineColor = 'rgba(0, 0, 0, 0)';
-                        el.style.textDecorationColor = 'rgba(0, 0, 0, 0)';
-                        el.style.caretColor = '#000000'; 
-                        el.style.accentColor = '#000000';
-
-                        if (el.classList.contains('bg-gradient-to-r')) {
-                            el.style.backgroundImage = 'linear-gradient(to right, rgb(0, 128, 128), rgb(0, 139, 139))';
-                        }
-                    }
-                });
+      const canvas = await html2canvas(transferSummaryRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          const fontElements = clonedDoc.querySelectorAll('font');
+          fontElements.forEach(fontEl => {
+            while (fontEl.firstChild) {
+              fontEl.parentNode.insertBefore(fontEl.firstChild, fontEl);
             }
-        });
+            fontEl.parentNode.removeChild(fontEl);
+          });
 
-        const image = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.href = image;
-        link.download = `transferencia_interbancaria_${lastTransferDetails?.referencia || new Date().getTime()}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+          const elements = clonedDoc.querySelectorAll('*');
+          elements.forEach(el => {
+            if (el.style) {
+              el.style.color = '#000000';
+              el.style.backgroundColor = 'transparent';
+              el.style.borderColor = '#000000';
 
-        Swal.fire({
-            title: 'Guardado',
-            text: 'La imagen de la transferencia se ha guardado correctamente.',
-            icon: 'success',
-            timer: 1500,
-        });
+              el.style.outlineColor = 'rgba(0, 0, 0, 0)';
+              el.style.textDecorationColor = 'rgba(0, 0, 0, 0)';
+              el.style.caretColor = '#000000';
+              el.style.accentColor = '#000000';
+
+              if (el.classList.contains('bg-gradient-to-r')) {
+                el.style.backgroundImage = 'linear-gradient(to right, rgb(0, 128, 128), rgb(0, 139, 139))';
+              }
+            }
+          });
+        }
+      });
+
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = `transferencia_interbancaria_${lastTransferDetails?.referencia || new Date().getTime()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      Swal.fire({
+        title: 'Guardado',
+        text: 'La imagen de la transferencia se ha guardado correctamente.',
+        icon: 'success',
+        timer: 1500,
+      });
     } catch (error) {
-        console.error('Error al guardar la imagen:', error);
-        Swal.fire({
-            title: 'Error',
-            text: 'No se pudo guardar la imagen de la transferencia.',
-            icon: 'error',
-        });
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo guardar la imagen de la transferencia.',
+        icon: 'error',
+      });
     } finally {
-        setSavingLoading(false);
+      setSavingLoading(false);
     }
   };
 
   const handleAddFavoriteClick = async () => {
     setAddingFavorite(true);
     try {
-        if (!currentUser || !currentUser.id) {
-            Swal.fire({
-                title: 'Error',
-                text: 'No se pudo obtener el ID del usuario para agregar a favoritos. Por favor, intenta iniciar sesión de nuevo.',
-                icon: 'error',
-            });
-            setAddingFavorite(false);
-            return;
-        }
-
-        const favoriteData = {
-            usuario: currentUser.id, 
-            cuentaDestino: formData.cuentaReceptorExterno,
-            tipoCuenta: formData.tipoCuentaReceptor,
-            alias: formData.aliasReceptor,
-        };
-        await handleAddFavorite(favoriteData);
-    } catch (error) {
-        console.error("Error al agregar favorito:", error);
-    } finally {
+      if (!currentUser || !currentUser.id) {
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo obtener el ID del usuario para agregar a favoritos. Por favor, intenta iniciar sesión de nuevo.',
+          icon: 'error',
+        });
         setAddingFavorite(false);
+        return;
+      }
+
+      const favoriteData = {
+        usuario: currentUser.id,
+        cuentaDestino: formData.cuentaReceptorExterno,
+        tipoCuenta: formData.tipoCuentaReceptor,
+        alias: formData.aliasReceptor,
+      };
+      await handleAddFavorite(favoriteData);
+    } catch (error) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al agregar favorito',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      })
+    } finally {
+      setAddingFavorite(false);
     }
   };
 
@@ -512,7 +520,7 @@ const TransferenciaInterbancariaClient = () => {
                 </p>
                 <p><strong>Tipo Cuenta Receptora:</strong> {lastTransferDetails.tipoCuentaReceptor}</p>
                 <p><strong>Alias Receptor:</strong> {formData.aliasReceptor}</p>
-                <p><strong>Banco Receptor:</strong> {formData.bancoReceptor}</p> 
+                <p><strong>Banco Receptor:</strong> {formData.bancoReceptor}</p>
               </div>
 
               <div className="flex flex-col sm:flex-row justify-center gap-4 mt-6">
